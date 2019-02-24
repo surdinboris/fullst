@@ -36,7 +36,7 @@ app.get('*', async function (request, res) {
         isdir=await stats.isDirectory()
     } catch (error) {
         //console.log(error);
-        if (error.code != "ENOENT") throw error;
+        if (error.code == "ENOENT") throw error;
         // else res.send("File not found");
     }
     if (isdir) {
@@ -64,8 +64,9 @@ app.get('*', async function (request, res) {
         if (extname(filepath) == ".html"){
             res.render(filepath);
         }
-        else
-            {res.download(filepath)};
+        else{
+            let readstream=createReadStream(filepath);
+            readstream.pipe(res)}
     }
 });
 
