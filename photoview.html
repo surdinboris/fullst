@@ -5,9 +5,12 @@
     <title>Title</title>
 </head>
 <body>
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/underscore/underscore.js"></script>
+<script src="app.js"></script>
 
 <script type="text/template" id="item-template">
-    <input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %>">
+    <input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %>>
     <label class="record"><%= title %></label>
     <input class="edit" id="todoediting" value="<%= title %>">
     <input class="edit" id="tododate" type="date" value="<%= todoDate %>">
@@ -15,9 +18,6 @@
 
 </script>
 
-<script src="node_modules/jquery/dist/jquery.js"></script>
-<script src="node_modules/underscore/underscore.js"></script>
-<script src="app.js"></script>
 
 
 </body>
