@@ -30,14 +30,16 @@ app.get('*', async function (request, res) {
     let filepath = toFSpath(request.url);
     // console.log('toFSpath',request.url,toFSpath(request.url))
     let stats;
+    let isdir;
     try {
         stats = await stat(filepath);
+        isdir=await stats.isDirectory()
     } catch (error) {
         //console.log(error);
         if (error.code != "ENOENT") throw error;
-        else res.send("File not found");
+        // else res.send("File not found");
     }
-    if (stats.isDirectory()) {
+    if (isdir) {
         //fullpath to enter to  subsub levels
         let urllist = await readdir(filepath);
         // let urllist = (await readdir(path)).map((c) => {
@@ -58,11 +60,12 @@ app.get('*', async function (request, res) {
     }
 
     else {
-        console.log(extname(filepath),filepath);
+        // console.log(extname(filepath),filepath);
         if (extname(filepath) == ".html"){
             res.render(filepath);
         }
-        res.download(filepath);
+        else
+            {res.download(filepath)};
     }
 });
 
