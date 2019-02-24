@@ -1,0 +1,71 @@
+*{
+    max-width: 600px;
+}
+
+body{
+    margin: 0 auto;
+    padding: 0;
+}
+
+/*navbar*/
+#main_navbar{
+    width: 100%;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #ffffff;
+}
+#main_navbar ul{
+    margin: 0;
+    display: flex;
+    padding: 10px 0;
+
+}
+#main_navbar li{
+    display: inline-block;
+    margin: 0 auto;
+}
+.main_navbar_item{
+    text-decoration: none;
+    color: black;
+}
+#main_navbar a{
+    width: 100%;
+    vertical-align: 0;
+    padding: 5px;
+}
+#main_navbar a:hover{
+    background-color: gold;
+}
+#main_navbar li{
+    text-align: center;
+    width: 100%;
+    border-right: 1px solid #000000;
+}
+#main_navbar .end{
+    border-right: 0;
+}
+/*banner style*/
+#main_banner{
+    padding-top: 40px;
+    background-image: url("images/pexels-photo-355770.jpeg");
+    background-size: cover;
+    height: 300px;
+    background-position-y: 100%;
+}
+#slogan{
+    margin: 5% 5%;
+}
+/*main content*/
+#pointer{
+    font-weight: bold;
+    margin: 2% 5% ;
+}
+
+#main_content{
+    float: left;
+}
+div.benefit{
+    display: inline-block;
+}
