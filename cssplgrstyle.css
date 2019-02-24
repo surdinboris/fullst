@@ -1,25 +1,27 @@
 *{
-    max-width: 600px;
+    max-width: 1000px;
+}
+html{
+    margin: 0 auto;
 }
 
 body{
-    margin: 0 auto;
+    margin-top:40px;
     padding: 0;
 }
 
 /*navbar*/
 #main_navbar{
     width: 100%;
-    height: auto;
+    height: 40px;
     position: fixed;
     top: 0;
-    left: 0;
     background-color: #ffffff;
 }
 #main_navbar ul{
     margin: 0;
     display: flex;
-    padding: 10px 0;
+    padding: 10px 0px;
 
 }
 #main_navbar li{
@@ -33,7 +35,7 @@ body{
 #main_navbar a{
     width: 100%;
     vertical-align: 0;
-    padding: 5px;
+    padding: 10px 10px;
 }
 #main_navbar a:hover{
     background-color: gold;
@@ -60,12 +62,73 @@ body{
 /*main content*/
 #pointer{
     font-weight: bold;
-    margin: 2% 5% ;
+    margin: 10px 0px 0 ;
 }
 
 #main_content{
-    float: left;
+
+    display: flex;
 }
-div.benefit{
+.benefit{
+    margin: 5px 10px;
+    padding: 5px;
+    border-right: black solid 1px;
+    font-size: smaller;
+    /*display: inline-block;*/
+    /*max-width: 100px;*/
+}
+
+.benefit:last-child{
+    border-right:0;
+}
+.title{
+    font-size: large;
+}
+#scenario p:first-letter{
+
+    /*color: red;*/
+    font-size: large;
+}
+
+#scenario{
+    text-indent: 15px;
+    margin: 0 auto;
+}
+
+footer{
+    bottom: 0;
+    margin: 40px 0 auto;
+    color: #b4a980;
+    background-color: #ffffff;
+    font-size: smaller;
+}
+#copyr-info{
+    display: flex;
+
+}
+#copyr-info p{
+    margin: 0 15px;
+    padding: 5px;
+}
+
+
+#secure-stuff{
+    width: 50%;
+    display: flex;
+    margin: 0 auto;
+    padding: 5px;
+}
+
+#secure-stuff li{
     display: inline-block;
+    margin: 0 auto;
+}
+#secure-stuff a{
+    text-decoration: none;
+    color: #b4a980;
+    padding: 4px;
+}
+#secure-stuff a:hover{
+background-color: #666666;
+    color: white;
 }
