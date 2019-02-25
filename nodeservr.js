@@ -7,7 +7,6 @@ const mime = require('mime');
 let http =require('http');
 
 let server=http.createServer(async function (request,response) {
-    console.log(request.url)
     let filepath = toFSpath(request.url);
     // console.log('toFSpath',request.url,toFSpath(request.url))
     let stats;
@@ -19,14 +18,14 @@ let server=http.createServer(async function (request,response) {
         //console.log(error);
         if (error.code == "ENOENT") {
             response.writeHead(404, `resource not found ${error}`);
-            console.log(error.toString().replace("\n"));
             return
         }
     }
     if (isdir) {
         let filelist = await readdir(filepath);
-        filelist=filelist.map(function(f){
-            console.log('>>>',join(request.url,f))
+        filelist=filelist.map(async function(f){
+            let fstat= await stat(join(filepath,f));
+            console.log('>>>',fstat);
             return join(request.url,f);
         });
         let filefront = await readFile('fileview.html');

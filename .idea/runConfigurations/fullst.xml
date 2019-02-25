@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="fullst" type="NodeJSConfigurationType" path-to-js-file="nodeservr.js" working-dir="$PROJECT_DIR$">
+    <EXTENSION ID="com.jetbrains.nodejs.run.NodeJSStartBrowserRunConfigurationExtension">
+      <browser start="true" with-js-debugger="true" url="http://localhost:3000" />
+    </EXTENSION>
+    <method v="2" />
+  </configuration>
+</component>
