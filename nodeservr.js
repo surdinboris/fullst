@@ -7,11 +7,11 @@ const mime = require('mime');
 let http =require('http');
 
 let server=http.createServer(async function (request,response) {
+    console.log(request.url)
     let filepath = toFSpath(request.url);
     // console.log('toFSpath',request.url,toFSpath(request.url))
     let stats;
     let isdir;
-
     try {
         stats = await stat(filepath);
         isdir=await stats.isDirectory()
@@ -19,22 +19,23 @@ let server=http.createServer(async function (request,response) {
         //console.log(error);
         if (error.code == "ENOENT") {
             response.writeHead(404, `resource not found ${error}`);
-            response.end();
             console.log(error.toString().replace("\n"));
             return
         }
     }
     if (isdir) {
-        //fullpath to enter to  subsub levels
         let filelist = await readdir(filepath);
-        let filefront= await readFile('fileview.html');
-        let json=JSON.stringify({"filelist":filelist});
+        filelist=filelist.map(function(f){
+            console.log('>>>',join(request.url,f))
+            return join(request.url,f);
+        });
+        let filefront = await readFile('fileview.html');
+        let json=JSON.stringify(filelist);
         response.write(filefront);
-        response.end(`<script type="text/javascript">let filelist= ${json}</script>`)
+        response.end(`<script type="text/javascript">let filelist = ${json}</script>`)
     }
     else {
         let mimeType=await mime.getType(filepath);
-        console.log('getType',filepath,`{Content-Type:${mimeType}}`);
         response.setHeader("Content-Type",mimeType);
         response.end(await readFile(filepath))
     }
@@ -50,5 +51,4 @@ function toFSpath(url) {
     }
     return filepath;
 }
-
 server.listen(3000);
