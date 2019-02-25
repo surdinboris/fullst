@@ -23,13 +23,24 @@ let server=http.createServer(async function (request,response) {
     }
     if (isdir) {
         let filelist = await readdir(filepath);
-        filelist=filelist.map(async function(f){
-            let fstat= await stat(join(filepath,f));
-            console.log('>>>',fstat);
+
+        let filelistobj={};
+
+        for(let i=0; i<filelist.length; i++){
+            filelistobj[filelist[i]]=[await stat(join(filepath,filelist[i])),join(request.url,filelist[i])]
+        }
+        console.log(filelistobj);
+        filelist=filelist.map( function(f){
+            // let fstat=  stat(join(filepath,f));
+            // console.log('>>>',fstat);
+            // fstat.then(res => console.log(">>>",res))
             return join(request.url,f);
         });
+
+
+
         let filefront = await readFile('fileview.html');
-        let json=JSON.stringify(filelist);
+        let json=JSON.stringify(await filelist);
         response.write(filefront);
         response.end(`<script type="text/javascript">let filelist = ${json}</script>`)
     }

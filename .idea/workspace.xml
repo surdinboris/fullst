@@ -33,8 +33,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nodeservr.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="214">
-              <caret line="26" column="40" selection-start-line="26" selection-start-column="40" selection-end-line="26" selection-end-column="40" />
+            <state relative-caret-position="162">
+              <caret line="29" column="44" selection-start-line="29" selection-start-column="44" selection-end-line="29" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -254,8 +254,8 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Node.js.fullst" />
       <item itemvalue="JavaScript Debug.fullst JavaScript" />
+      <item itemvalue="Node.js.fullst" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -274,7 +274,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40294000" />
+    <option name="totallyTimeSpent" value="41276000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -287,7 +287,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1440" height="878" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1788269" />
       <window_info id="Structure" order="1" weight="0.25" />
@@ -296,19 +295,19 @@
       <window_info id="UI Designer" order="4" />
       <window_info id="Image Layers" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Database Changes" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.48443338" weight="0.24571429" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.7839771" weight="0.4351145" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.85193133" visible="true" weight="0.41603053" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.7825465" weight="0.4351145" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.851216" visible="true" weight="0.41603053" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.14806867" side_tool="true" visible="true" weight="0.41603053" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49928468" weight="0.32951653" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.14878398" side_tool="true" visible="true" weight="0.41603053" />
       <window_info anchor="bottom" id="Messages" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.49751243" weight="0.3293979" />
       <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.48072138" weight="0.32821724" />
+      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="12" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -330,7 +329,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="301">
           <caret line="13279" column="27" lean-forward="true" selection-start-line="13279" selection-start-column="27" selection-end-line="13279" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -396,8 +394,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nodeservr.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="26" column="40" selection-start-line="26" selection-start-column="40" selection-end-line="26" selection-end-column="40" />
+        <state relative-caret-position="162">
+          <caret line="29" column="44" selection-start-line="29" selection-start-column="44" selection-end-line="29" selection-end-column="44" />
         </state>
       </provider>
     </entry>
