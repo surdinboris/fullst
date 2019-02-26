@@ -4,15 +4,24 @@ $(function () {
     console.log('app init');
     console.log(filelist);
     let files=$("#files")[0];
-    console.log(files);
-    for(let i=0; i<filelist.length; i++) {
-        let newlink = document.createElement('a');
-        console.log(newlink);
-        newlink.setAttribute('class', 'filename');
-        let linkname=filelist[i].split("\\");
-        console.log('ppp',linkname);
-        newlink.appendChild(document.createTextNode(linkname[linkname.length-1]));
-        newlink.setAttribute('href', filelist[i]);
+    for(let key in filelist) {
+        let newlink = document.createElement('p');
+        newlink.setAttribute('class', 'filerow');
+        // newlink.appendChild(document.createTextNode(key));
+        for(let fkey in filelist[key]){
+            let att = document.createElement('b');
+            if(fkey=='fullname') {
+                att.setAttribute('href', filelist[key][fkey]);
+                att = document.createElement('a');
+            }
+            att.setAttribute('class', fkey);
+            att.appendChild(document.createTextNode(filelist[key][fkey]));
+            if(fkey=='fullname') {
+                att.setAttribute('href', filelist[key][fkey]);
+            }
+            newlink.appendChild(att)
+        }
+
         files.appendChild(newlink);
         files.appendChild(document.createElement('br'))
     }

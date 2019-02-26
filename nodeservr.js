@@ -27,22 +27,29 @@ let server=http.createServer(async function (request,response) {
         let filelistobj={};
 
         for(let i=0; i<filelist.length; i++){
-            filelistobj[filelist[i]]=[await stat(join(filepath,filelist[i])),join(request.url,filelist[i])]
+            let filest = await stat(join(filepath,filelist[i]));
+            // console.log(filest);
+            filelistobj[filelist[i]]={};
+            filelistobj[filelist[i]].fullname = join(request.url,filelist[i]);
+            filelistobj[filelist[i]].fsize=filest.size;
+            filelistobj[filelist[i]].mtime=filest.mtime;
+            filelistobj[filelist[i]].isdir=filest.isDirectory();
+
         }
         console.log(filelistobj);
-        filelist=filelist.map( function(f){
-            // let fstat=  stat(join(filepath,f));
-            // console.log('>>>',fstat);
-            // fstat.then(res => console.log(">>>",res))
-            return join(request.url,f);
-        });
+        // filelist=filelist.map( function(f){
+        //     // let fstat=  stat(join(filepath,f));
+        //     // console.log('>>>',fstat);
+        //     // fstat.then(res => console.log(">>>",res))
+        //     return join(request.url,f);
+        // });
 
 
 
         let filefront = await readFile('fileview.html');
-        let json=JSON.stringify(await filelist);
+        filelistobj=JSON.stringify(filelistobj);
         response.write(filefront);
-        response.end(`<script type="text/javascript">let filelist = ${json}</script>`)
+        response.end(`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
     }
     else {
         let mimeType=await mime.getType(filepath);
