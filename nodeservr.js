@@ -25,7 +25,15 @@ let server=http.createServer(async function (request,response) {
         let filelist = await readdir(filepath);
 
         let filelistobj={};
-
+        let headerwritten=false;
+        if(!headerwritten){
+            filelistobj.headers={};
+            filelistobj.headers.fullname = 'Name';
+            filelistobj.headers.fsize='Size';
+            filelistobj.headers.mtime='Modified';
+            filelistobj.headers._isdir='Directory';
+            headerwritten= true;
+        }
         for(let i=0; i<filelist.length; i++){
             let filest = await stat(join(filepath,filelist[i]));
             // console.log(filest);
@@ -33,8 +41,7 @@ let server=http.createServer(async function (request,response) {
             filelistobj[filelist[i]].fullname = join(request.url,filelist[i]);
             filelistobj[filelist[i]].fsize=filest.size;
             filelistobj[filelist[i]].mtime=filest.mtime;
-            filelistobj[filelist[i]].isdir=filest.isDirectory();
-
+            filelistobj[filelist[i]]._isdir=filest.isDirectory();
         }
         console.log(filelistobj);
         // filelist=filelist.map( function(f){
