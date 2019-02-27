@@ -25,15 +25,11 @@ let server=http.createServer(async function (request,response) {
         let filelist = await readdir(filepath);
 
         let filelistobj={};
-        let headerwritten=false;
-        if(!headerwritten){
-            filelistobj.headers={};
-            filelistobj.headers.fullname = 'Name';
-            filelistobj.headers.fsize='Size';
-            filelistobj.headers.mtime='Modified';
-            filelistobj.headers._isdir='Directory';
-            headerwritten= true;
-        }
+        filelistobj.headers={};
+        filelistobj.headers.fullname = 'Name';
+        filelistobj.headers.fsize='Size';
+        filelistobj.headers.mtime='Modified';
+
         for(let i=0; i<filelist.length; i++){
             let filest = await stat(join(filepath,filelist[i]));
             // console.log(filest);
