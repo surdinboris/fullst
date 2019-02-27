@@ -7,7 +7,7 @@ body{
 .grid-container {
     width: 600px;
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: auto auto auto;
     background-color: #2196F3;
     padding: 2px;
 }
@@ -17,4 +17,10 @@ body{
     padding: 2px;
     font-size: 15px;
     text-align: left;
+}
+.isdir{
+    color: #9a6200;
+}
+.isfile{
+    color: #5b851b;
 }
