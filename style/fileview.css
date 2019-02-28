@@ -1,26 +1,52 @@
 html{
     background-color: #b4a980;
 }
-body{
-
-}
 .grid-container {
     width: 600px;
     display: grid;
     grid-template-columns: auto auto auto;
-    background-color: #2196F3;
+    /*background-color: #2196F3;*/
     padding: 2px;
+}
+.header{
+    font-weight: bold;
+    padding: 7px;
 }
 .grid-item {
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(0, 0, 0, 0.8);
-    padding: 2px;
+    background-color: rgba(207, 207, 207, 0.8);
+    border-right: 1px solid rgba(0, 0, 0, 0.8);
+    border-bottom:  1px solid rgba(0, 0, 0, 0.8);
+    padding: 7px;
     font-size: 15px;
-    text-align: left;
+    /*text-align: left;*/
+}
+.grid-item:nth-child(3n){
+    border-right: none;
+}
+.grid-item:nth-last-child(-n+3){
+    border-bottom: none;
+}
+
+/*.header{*/
+    /*display: flex;*/
+    /*font-weight: bold;*/
+    /*align-items: center;*/
+/*}*/
+
+.filename{
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+}
+.filename img{
+    margin-right: 5px;
+
 }
 .isdir{
-    color: #9a6200;
+    height: 12px;
+    width: 11px;
 }
 .isfile{
-    color: #5b851b;
+    height: 10px;
+    width: 10px;
 }
