@@ -1,10 +1,31 @@
 $(function () {
     'use strict';
     console.log('app init');
-    console.log(filelist);
+
     let files = $("#files")[0];
 
-    for (let fileobj in filelist) {
+    function sortfiles(objct) {
+        let sorted=[];
+        for(let f in objct){
+            if(f == 'headers') continue;
+            sorted.push([f,objct[f]])
+    }
+        let result = sorted.sort(function (a,b){
+        return  (a[1]['_isdir'] === b[1]['_isdir'])? 0 : a[1]['_isdir']? -1 : 1;
+    });
+        //constructing back object
+        let sortedobj={};
+        sortedobj.headers=objct.headers;
+        for(let r of result){
+            sortedobj[r[0]]=r[1]
+        }
+
+        return sortedobj
+
+    }
+
+
+    for (let fileobj in sortfiles(filelist)) {
         //subsequence for "non columns" attributes
             let isdir=filelist[fileobj]["_isdir"];
         for (let fheader in filelist['headers']) {
