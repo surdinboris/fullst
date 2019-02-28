@@ -68,4 +68,21 @@ $(function () {
         }
 
     }
+
+    function getrestdata(url){
+        let data = fetch("/restapi/t")
+        return data
+
+    }
+
+    let anchors = $(".filename");
+    console.log(anchors);
+    anchors.each(function (index) {
+
+        $(this).on("click", async function (e) {
+            e.preventDefault();
+            let data = await getrestdata(".git");
+            console.log(data)
+        });
+    })
 });
