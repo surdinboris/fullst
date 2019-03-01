@@ -7,10 +7,9 @@ const mime = require('mime');
 let http =require('http');
 
 function isRestURL(requestUrl) {
-    let idfilter = /\/restapi\/?(\w+)?$/;
+    let idfilter = /\/restapi\//;
     let result =idfilter.exec(requestUrl);
     if(result && result != null){
-        console.log(result)
         return result;}
     else return false
 }
@@ -24,7 +23,8 @@ function toFSpath(url) {
     return filepath;
 }
 
-async function getfilelist(filepath, request){
+async function getfilelist(url){
+    let filepath=toFSpath(url);
     let filelist = await readdir(filepath);
 
     let filelistobj = {};
@@ -37,7 +37,7 @@ async function getfilelist(filepath, request){
         let filest = await stat(join(filepath, filelist[i]));
         // console.log(filest);
         filelistobj[filelist[i]] = {};
-        filelistobj[filelist[i]].fullname = join(request.url, filelist[i]);
+        filelistobj[filelist[i]].fullname = join(url, filelist[i]);
         filelistobj[filelist[i]].fsize = filest.size;
         filelistobj[filelist[i]].mtime = filest.mtime;
         filelistobj[filelist[i]]._isdir = filest.isDirectory();
@@ -48,9 +48,14 @@ async function getfilelist(filepath, request){
 
 let server=http.createServer(async function (request,response) {
 
-    if(request.method == 'GET' && isRestURL(request.url) == false) {
-        console.log(request.method, isRestURL(request.url));
-        let filepath = toFSpath(request.url);
+    if(request.method == 'GET'){
+        let url = request.url;
+        if(isRestURL(request.url)){
+            url = request.url.replace(/\/restapi\//, '/')+'/';
+            console.log('new url', url)
+        }
+        let filepath = toFSpath(url);
+
         // console.log('toFSpath',request.url,toFSpath(request.url))
         let stats;
         let isdir;
@@ -64,22 +69,32 @@ let server=http.createServer(async function (request,response) {
                 return
             }
         }
-        if (isdir) {
+        if (isdir && isRestURL(request.url) == false) {
             let filefront = await readFile('fileview.html');
-            let filelistobj = await getfilelist(filepath, request);
+            let filelistobj = await getfilelist(url);
             filelistobj = JSON.stringify(filelistobj);
             response.write(filefront);
             response.end(`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
-        } else {
+        }
+        if (isdir && isRestURL(request.url)){
+            console.log('resttt',url)
+            let filelistobj = await getfilelist(url);
+            filelistobj = JSON.stringify(filelistobj);
+            response.end(filelistobj)
+        }
+        if (isdir == false) {
             let mimeType = await mime.getType(filepath);
             response.setHeader("Content-Type", mimeType);
             response.end(await readFile(filepath))
         }
 
     }
-if(request.method == 'GET' && isRestURL(request.url)){
-    response.end('restfulapi url response')
-}
+// if(request.method == 'GET' && isRestURL(request.url)){
+//     // response.setHeader("Content-Type", "text/html");
+//     let filelistobj = await getfilelist(request);
+//     filelistobj = JSON.stringify(filelistobj);
+//     response.end(filelistobj)
+// }
 
 });
 
