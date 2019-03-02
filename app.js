@@ -24,8 +24,13 @@ $(function () {
 
     function render(filelist) {
         files.innerHTML = '';
+        let headers=filelist["headers"];
+        headers[Symbol.iterator]= function * () {
+            for (let key in this) {
+                yield [key, this[key]] // yield [key, value] pair
+            }
+        };
         //in case of headers obj
-        let headers = [];
         for (let fheader in filelist['headers']) {
             let contentrow = document.createElement('div');
             contentrow.setAttribute('class', 'grid-item');
@@ -34,7 +39,6 @@ $(function () {
 
             for (let fileobj in sortfiles(filelist)) {
                 if (fileobj == 'headers') {
-                    headers.push(filelist[fileobj][fheader]);
                     contentrow.appendChild(document.createTextNode(filelist[fileobj][fheader]));
                     contentrow.classList.add('header');
                 }
@@ -52,12 +56,7 @@ $(function () {
 
             if (fileobj != 'headers') {
                 let isdir = filelist[fileobj]["_isdir"];
-
-
                 //iterating over headers and extracting data based on headers column data
-                for (let header in headers) {
-                    console.log('>', filelist[fileobj] );
-                    if (filelist[fileobj] == 'fullname') {
                         let aelem = document.createElement('a');
                         aelem.setAttribute('class', 'filename');
                         if (isdir) {
@@ -72,17 +71,22 @@ $(function () {
                             fileicon.setAttribute('class', 'isfile');
                             aelem.appendChild(fileicon)
                         }
-                        aelem.setAttribute('href', filelist[fileobj][fheader]);
+                        aelem.setAttribute('href', filelist[fileobj]['fullname']);
                         aelem.appendChild(document.createTextNode(fileobj));
                         contentrow.appendChild(aelem);
                         contentrow.classList.add('datacell');
-                    } else {
-                        contentrow.appendChild(document.createTextNode(filelist[fileobj]));
+                    for(let header of headers) {
+                        if (header != 'fullname') {
+                        }
+                        contentrow.appendChild(document.createTextNode(filelist[fileobj][header[0]]));
                         contentrow.classList.add('datacell');
                     }
-                    files.appendChild(contentrow);
-                }
-            }
+                files.appendChild(contentrow);
+                    }
+
+
+
+
         }
         //add after headers
         let gouprow = document.createElement('div');
