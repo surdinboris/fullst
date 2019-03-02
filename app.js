@@ -45,61 +45,65 @@ $(function () {
                 files.appendChild(contentrow);
             }
         }
-        //subsequence for "non display" attributes
+
+
+
         filelist = sortfiles(filelist);
+
         for (let fileobj in filelist) {
             let contentrow = document.createElement('div');
             contentrow.setAttribute('class', 'grid-item');
-
-
-            //ad data rows
-
             if (fileobj != 'headers') {
                 let isdir = filelist[fileobj]["_isdir"];
                 //iterating over headers and extracting data based on headers column data
-                        let aelem = document.createElement('a');
-                        aelem.setAttribute('class', 'filename');
-                        if (isdir) {
-                            let diricon = document.createElement("img");
-                            diricon.setAttribute("src", "/images/directory.svg");
-                            diricon.setAttribute("class", "isdir");
-                            // aelem.setAttribute('class', 'isdir');
-                            aelem.appendChild(diricon)
-                        } else {
-                            let fileicon = document.createElement("img");
-                            fileicon.setAttribute("src", "/images/file.svg");
-                            fileicon.setAttribute('class', 'isfile');
-                            aelem.appendChild(fileicon)
-                        }
-                        aelem.setAttribute('href', filelist[fileobj]['fullname']);
-                        aelem.appendChild(document.createTextNode(fileobj));
-                        contentrow.appendChild(aelem);
-                        contentrow.classList.add('datacell');
-                    for(let header of headers) {
-                        if (header != 'fullname') {
-                        }
-                        contentrow.appendChild(document.createTextNode(filelist[fileobj][header[0]]));
-                        contentrow.classList.add('datacell');
-                    }
+                let aelem = document.createElement('a');
+                aelem.setAttribute('class', 'filename');
+                if (isdir) {
+                    let diricon = document.createElement("img");
+                    diricon.setAttribute("src", "/images/directory.svg");
+                    diricon.setAttribute("class", "isdir");
+                    aelem.classList.add('isdir');
+                    aelem.appendChild(diricon)
+                }
+                else {
+                    let fileicon = document.createElement("img");
+                    fileicon.setAttribute("src", "/images/file.svg");
+                    fileicon.setAttribute('class', 'isfile');
+                    aelem.appendChild(fileicon)
+                    aelem.classList.add('isfile');
+                }
+                aelem.setAttribute('href', filelist[fileobj]['fullname']);
+                aelem.appendChild(document.createTextNode(fileobj));
+                contentrow.appendChild(aelem);
+                contentrow.classList.add('datacell');
                 files.appendChild(contentrow);
-                    }
 
 
 
-
+                for(let header of headers) {
+                    let contentrow = document.createElement('div');
+                    contentrow.setAttribute('class', 'grid-item');
+                if (header[0] != 'fullname') {
+                contentrow.appendChild(document.createTextNode(filelist[fileobj][header[0]]));
+                contentrow.classList.add('datacell');
+                    files.appendChild(contentrow)
+                }
+            }
+            }
         }
         //add after headers
-        let gouprow = document.createElement('div');
-
+        //let gouprow = document.createElement('div');
         let anchors = $(".filename");
         anchors.each(function (index) {
             $(this).on("click", async function (e) {
-
+                if(!e.target.classList.contains('isfile')){
                 e.preventDefault();
                 let url = e.target.getAttribute('href');
                 let data = await getrestdata(url);
+                console.log(data)
                 console.log(JSON.parse(data))
                 render(JSON.parse(data))
+                }
             });
         });
     }

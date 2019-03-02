@@ -22,8 +22,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="896">
-              <caret line="83" column="21" lean-forward="true" selection-start-line="83" selection-start-column="21" selection-end-line="83" selection-end-column="21" />
+            <state relative-caret-position="114">
+              <caret line="101" column="24" selection-start-line="101" selection-start-column="24" selection-end-line="102" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -31,8 +31,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nodeservr.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1848">
-              <caret line="88" column="9" selection-start-line="88" selection-start-column="9" selection-end-line="88" selection-end-column="9" />
+            <state relative-caret-position="219">
+              <caret line="50" column="32" selection-start-line="50" selection-start-column="32" selection-end-line="50" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -49,7 +49,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/style/fileview.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="861">
+            <state relative-caret-position="473">
               <caret line="41" column="19" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
             </state>
           </provider>
@@ -110,8 +110,8 @@
     <auto-save>true</auto-save>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-319" />
-    <option name="y" value="57" />
+    <option name="x" value="-24" />
+    <option name="y" value="77" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
   </component>
@@ -268,12 +268,12 @@
       <workItem from="1550988577123" duration="7953000" />
       <workItem from="1551120188992" duration="672000" />
       <workItem from="1551371109487" duration="21945000" />
-      <workItem from="1551534261220" duration="13414000" />
+      <workItem from="1551534261220" duration="18592000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="111957000" />
+    <option name="totallyTimeSpent" value="117135000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -285,10 +285,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-319" y="57" width="1440" height="877" extended-state="0" />
+    <frame x="-24" y="77" width="1440" height="877" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17811158" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17811158" />
       <window_info id="Structure" order="1" weight="0.24964234" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="3" />
@@ -298,14 +298,14 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.48443338" weight="0.24521072" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.7699005" weight="0.18818681" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.83457714" weight="0.2955414" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.83457714" visible="true" weight="0.2955414" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3299363" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.16542289" side_tool="true" weight="0.46085858" />
       <window_info anchor="bottom" id="Messages" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.49751243" weight="0.3293979" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.48072138" visible="true" weight="0.32738853" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.48072138" weight="0.32738853" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -390,20 +390,6 @@
     <entry file="file://$PROJECT_DIR$/package-lock.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/style/cssplgrstyle.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="14" column="16" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nodeservr.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1848">
-          <caret line="88" column="9" selection-start-line="88" selection-start-column="9" selection-end-line="88" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fileview.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
@@ -411,17 +397,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/nodeservr.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="50" column="32" selection-start-line="50" selection-start-column="32" selection-end-line="50" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/style/fileview.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="861">
+        <state relative-caret-position="473">
           <caret line="41" column="19" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/style/cssplgrstyle.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="14" column="16" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="896">
-          <caret line="83" column="21" lean-forward="true" selection-start-line="83" selection-start-column="21" selection-end-line="83" selection-end-column="21" />
+        <state relative-caret-position="114">
+          <caret line="101" column="24" selection-start-line="101" selection-start-column="24" selection-end-line="102" selection-end-column="24" />
         </state>
       </provider>
     </entry>
