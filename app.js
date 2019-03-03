@@ -44,16 +44,24 @@ $(function () {
             }
         }
 
-
+        //adding empty row
+        for(let header of headers) {
+            let contentrow = document.createElement('div');
+            contentrow.setAttribute('class', 'grid-item');
+            files.appendChild(contentrow)
+        }
 
         filelist = sortfiles(filelist);
 
         for (let fileobj in filelist) {
             let contentrow = document.createElement('div');
             contentrow.setAttribute('class', 'grid-item');
+
+
+
+
             if (fileobj != 'headers') {
                 let isdir = filelist[fileobj]["_isdir"];
-                console.log(isdir)
                 //iterating over headers and extracting data based on headers column data
                 let aelem = document.createElement('a');
                 aelem.setAttribute('class', 'filename');
