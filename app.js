@@ -1,6 +1,5 @@
 $(function () {
     'use strict';
-
     console.log('app init');
     let files = $("#files")[0];
     function sortfiles(objct) {
@@ -19,7 +18,6 @@ $(function () {
             sortedobj[r[0]]=r[1]
         }
         return sortedobj
-
     }
 
     function render(filelist) {
@@ -55,20 +53,21 @@ $(function () {
             contentrow.setAttribute('class', 'grid-item');
             if (fileobj != 'headers') {
                 let isdir = filelist[fileobj]["_isdir"];
+                console.log(isdir)
                 //iterating over headers and extracting data based on headers column data
                 let aelem = document.createElement('a');
                 aelem.setAttribute('class', 'filename');
                 if (isdir) {
                     let diricon = document.createElement("img");
                     diricon.setAttribute("src", "/images/directory.svg");
-                    diricon.setAttribute("class", "isdir");
+                    diricon.setAttribute("class", "imgdir");
                     aelem.classList.add('isdir');
                     aelem.appendChild(diricon)
                 }
                 else {
                     let fileicon = document.createElement("img");
                     fileicon.setAttribute("src", "/images/file.svg");
-                    fileicon.setAttribute('class', 'isfile');
+                    fileicon.setAttribute('class', 'imgfile');
                     aelem.appendChild(fileicon)
                     aelem.classList.add('isfile');
                 }
@@ -101,7 +100,7 @@ $(function () {
                 let url = e.target.getAttribute('href');
                 let data = await getrestdata(url);
                 console.log(data)
-                console.log(JSON.parse(data))
+                console.log(JSON.parse(data));
                 render(JSON.parse(data))
                 }
             });

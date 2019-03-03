@@ -42,11 +42,11 @@ html{
     margin-right: 5px;
 
 }
-.isdir{
+.imgdir{
     height: 12px;
     width: 11px;
 }
-.isfile{
+.imgfile{
     height: 10px;
     width: 10px;
 }
