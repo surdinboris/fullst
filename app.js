@@ -68,18 +68,17 @@ $(function () {
             uplink.classList.add('.uplink');
             if(header == 'fullname'){
                 uplink.classList.add('uplink');
+                console.log('initial url', url);
                 if (url == undefined){
                     url='/'
                 }
                 else{
-                    let splitted =url.split('\\');
-                    console.log(splitted)
+                    let splitted = url.split('\\');
+                    splitted[0]='//';
                     splitted.pop();
-
-                    console.log(splitted)
-                    url= splitted.join('/');
-                    console.log(url)
+                    url = splitted.join('/');
                 }
+                console.log('resurl',url);
                 uplink.setAttribute('href', url);
                 uplink.appendChild(document.createTextNode('...'));
             }
