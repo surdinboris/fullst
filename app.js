@@ -79,6 +79,9 @@ $(function () {
                         url ="\\"
                     }
                 }
+                if (url = "\\" || '/'){
+                    uplink.setAttribute("display", 'none')
+                }
                 uplink.setAttribute('href', url);
                 uplink.appendChild(document.createTextNode('...'));
             }
