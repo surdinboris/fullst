@@ -65,20 +65,20 @@ $(function () {
             contentrow.classList.add('grid-item');
             contentrow.classList.add('uplinkcell');
             let uplink=document.createElement('a');
-            uplink.classList.add('.uplink');
             if(header == 'fullname'){
                 uplink.classList.add('uplink');
-                console.log('initial url', url);
                 if (url == undefined || url == '/'){
                     url='/'
                 }
-                else{
-                    let splitted = url.split('\\');
-                    splitted[0]='\\';
-                    splitted.pop();
-                    url = splitted.join('\\');
+                else {
+                    let splitted = url.split(/(?=\/)/g);
+                    if (splitted.length >= 2) {
+                        splitted.pop();
+                        url = splitted.join('\\');
+                    } else {
+                        url ="\\"
+                    }
                 }
-                console.log('resurl',url);
                 uplink.setAttribute('href', url);
                 uplink.appendChild(document.createTextNode('...'));
             }
