@@ -19,11 +19,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1848">
-              <caret line="88" column="11" lean-forward="true" selection-start-line="88" selection-start-column="11" selection-end-line="88" selection-end-column="11" />
+            <state relative-caret-position="483">
+              <caret line="23" column="29" lean-forward="true" selection-end-line="148" selection-end-column="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/style/appobj.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="798">
+              <caret line="38" column="5" selection-start-line="38" selection-start-column="5" selection-end-line="38" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -60,9 +69,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="HTML File" />
         <option value="CSS File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -74,6 +83,7 @@
       <find>_</find>
       <find>stat</find>
       <find>rest</find>
+      <find>initial</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -101,6 +111,7 @@
         <option value="$PROJECT_DIR$/nodeservr.js" />
         <option value="$PROJECT_DIR$/fileview.html" />
         <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/style/appobj.js" />
       </list>
     </option>
   </component>
@@ -111,10 +122,10 @@
     <auto-save>true</auto-save>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1448" />
-    <option name="y" value="23" />
-    <option name="width" value="1907" />
-    <option name="height" value="1053" />
+    <option name="x" value="1440" />
+    <option name="y" value="22" />
+    <option name="width" value="1920" />
+    <option name="height" value="1058" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -269,12 +280,12 @@
       <workItem from="1550988577123" duration="7953000" />
       <workItem from="1551120188992" duration="672000" />
       <workItem from="1551371109487" duration="21945000" />
-      <workItem from="1551534261220" duration="24996000" />
+      <workItem from="1551534261220" duration="25913000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="123539000" />
+    <option name="totallyTimeSpent" value="124456000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -421,8 +432,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1848">
-          <caret line="88" column="11" lean-forward="true" selection-start-line="88" selection-start-column="11" selection-end-line="88" selection-end-column="11" />
+        <state relative-caret-position="483">
+          <caret line="23" column="29" lean-forward="true" selection-end-line="148" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/style/appobj.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="798">
+          <caret line="38" column="5" selection-start-line="38" selection-start-column="5" selection-end-line="38" selection-end-column="5" />
         </state>
       </provider>
     </entry>
