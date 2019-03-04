@@ -69,14 +69,14 @@ $(function () {
             if(header == 'fullname'){
                 uplink.classList.add('uplink');
                 console.log('initial url', url);
-                if (url == undefined){
+                if (url == undefined || url == '/'){
                     url='/'
                 }
                 else{
                     let splitted = url.split('\\');
-                    splitted[0]='//';
+                    splitted[0]='\\';
                     splitted.pop();
-                    url = splitted.join('/');
+                    url = splitted.join('\\');
                 }
                 console.log('resurl',url);
                 uplink.setAttribute('href', url);
