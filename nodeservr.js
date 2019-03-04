@@ -15,12 +15,16 @@ function isRestURL(requestUrl) {
 }
 function toFSpath(url) {
     let {pathname} = parse(url);
+    console.log(pathname)
     let filepath = resolve(decodeURIComponent(pathname).slice(1));
     if (filepath != baseDirectory &&
-        !filepath.startsWith(baseDirectory + sep)) {
+        !filepath.startsWith(baseDirectory + sep)){
+        console.log('ahtung toFSpath restriction filepath',filepath);
         throw {status: 403, body: "Forbidden"};
     }
+
     return filepath;
+
 }
 
 async function getfilelist(url){
@@ -42,20 +46,24 @@ async function getfilelist(url){
         filelistobj[filelist[i]].mtime = filest.mtime;
         filelistobj[filelist[i]]._isdir = filest.isDirectory();
     }
-    console.log(filelistobj);
+
     return filelistobj
 }
 
 let server=http.createServer(async function (request,response) {
 
     if(request.method == 'GET'){
+        console.log('get url', request.url);
         let url = request.url;
         if(isRestURL(request.url)){
-            url = request.url.replace(/\/restapi\//, '/')+'/';
+
+            url = request.url.replace(/\/restapi\//, '/');
             console.log('new url', url)
         }
-        let filepath = toFSpath(url);
+        else{
+            console.log('notresturl')}
 
+        let filepath = toFSpath(url);
         // console.log('toFSpath',request.url,toFSpath(request.url))
         let stats;
         let isdir;

@@ -20,8 +20,23 @@ $(function () {
         return sortedobj
     }
 
-    function render(filelist) {
+    function render(filelist, url) {
         files.innerHTML = '';
+        //bindclicks function - events appending
+        function bindclicks(anchors) {
+            anchors.each(function (index) {
+                $(this).on("click", async function (e) {
+                    if(!e.target.classList.contains('isfile')){
+                        e.preventDefault();
+                        let url = e.target.getAttribute('href');
+                        let data = await getrestdata(url);
+                        render(JSON.parse(data), url)
+                    }
+                });
+            });
+        }
+
+        //modifying iterator for headers to return
         let headers=filelist["headers"];
         headers[Symbol.iterator]= function * () {
             for (let key in this) {
@@ -45,21 +60,40 @@ $(function () {
         }
 
         //adding empty row
-        for(let header of headers) {
+        Object.keys(headers).forEach(function (header) {
             let contentrow = document.createElement('div');
-            contentrow.setAttribute('class', 'grid-item');
-            files.appendChild(contentrow)
-        }
+            contentrow.classList.add('grid-item');
+            contentrow.classList.add('uplinkcell');
+            let uplink=document.createElement('a');
+            uplink.classList.add('.uplink');
+            if(header == 'fullname'){
+                uplink.classList.add('uplink');
+                if (url == undefined){
+                    url='/'
+                }
+                else{
+                    let splitted =url.split('\\');
+                    console.log(splitted)
+                    splitted.pop();
 
+                    console.log(splitted)
+                    url= splitted.join('/');
+                    console.log(url)
+                }
+                uplink.setAttribute('href', url);
+                uplink.appendChild(document.createTextNode('...'));
+            }
+            contentrow.appendChild(uplink);
+            files.appendChild(contentrow);
+            bindclicks($(".uplink"));
+        });
+
+        //adding
         filelist = sortfiles(filelist);
 
         for (let fileobj in filelist) {
             let contentrow = document.createElement('div');
             contentrow.setAttribute('class', 'grid-item');
-
-
-
-
             if (fileobj != 'headers') {
                 let isdir = filelist[fileobj]["_isdir"];
                 //iterating over headers and extracting data based on headers column data
@@ -76,7 +110,7 @@ $(function () {
                     let fileicon = document.createElement("img");
                     fileicon.setAttribute("src", "/images/file.svg");
                     fileicon.setAttribute('class', 'imgfile');
-                    aelem.appendChild(fileicon)
+                    aelem.appendChild(fileicon);
                     aelem.classList.add('isfile');
                 }
                 aelem.setAttribute('href', filelist[fileobj]['fullname']);
@@ -100,22 +134,12 @@ $(function () {
         }
         //add after headers
         //let gouprow = document.createElement('div');
-        let anchors = $(".filename");
-        anchors.each(function (index) {
-            $(this).on("click", async function (e) {
-                if(!e.target.classList.contains('isfile')){
-                e.preventDefault();
-                let url = e.target.getAttribute('href');
-                let data = await getrestdata(url);
-                console.log(data)
-                console.log(JSON.parse(data));
-                render(JSON.parse(data))
-                }
-            });
-        });
+
+    bindclicks($(".filename"));
     }
 
     function getrestdata(url){
+
         return fetch('/restapi'+url).then((resp) => {return resp.text()
         })
 
