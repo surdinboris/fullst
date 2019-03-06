@@ -7,22 +7,42 @@ $(function () {
     //building file object prototype
     //and fulfill it from json data with additional event binding
     //and computed parameters such parent object
-    let File={};
+    function DirRecord(params){
+        this.fsize = params.fsize;
+        this.fullname = params.fullname;
+        this.fdname=params.fdname;
+        this.mtime = params.mtime;
 
-    File.filtered = function () {
-        return this.filtered
-    };
-    console.log(Object.getPrototypeOf(File));
+        this._isdir=params._isdir;
+        this.parenturl = params.parenturl;
+
+        this.filtered=params.filter;
+        if(params.fdtype == 'dir'){
+            this.icon="/images/directory.svg"
+        }
+        if(params.fdtype == 'file'){
+            this.icon="/images/file.svg"
+        }
+    }
+
+    DirRecord.prototype.populheaders = ['mtime','fsize','fullname''_isdir','filter'];
+
+
+    //test
+    //     let newfile = new File({fdname:'test.txt', filter:true, parenturl:'http://nextra42/'});
+    //
+    //     console.log(newfile.getfullurl());
 
     (function objgen(data){
-        Object.keys(filelist).map(function (fl) {
-            console.log(fl)
-        })
-    })();
+        let dirpage=[];
+
+        let dirrec = new DirRecord(dataentr)
+
+    })(filelist);
 
     function render(filelist) {
         files.innerHTML = '';
-}
+    }
 
     //initial render
     render(filelist)
