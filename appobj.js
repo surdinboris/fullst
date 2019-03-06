@@ -8,15 +8,16 @@ $(function () {
     //and fulfill it from json data with additional event binding
     //and computed parameters such parent object
     function DirRecord(params){
-        this.fsize = params.fsize;
-        this.fullname = params.fullname;
+        //looping via data object and assigning standard attributes
+        this.populheaders.forEach(function (header) {
+            this[header]=params[header]
+        },this);
+        //computation and appending calculated attributes
         this.fdname=params.fdname;
-        this.mtime = params.mtime;
-
         this._isdir=params._isdir;
         this.parenturl = params.parenturl;
-
         this.filtered=params.filter;
+
         if(params.fdtype == 'dir'){
             this.icon="/images/directory.svg"
         }
@@ -24,8 +25,8 @@ $(function () {
             this.icon="/images/file.svg"
         }
     }
-
-    DirRecord.prototype.populheaders = ['mtime','fsize','fullname''_isdir','filter'];
+    //standard attributes interface definition for looping via data object
+    DirRecord.prototype.populheaders = ['fullname','fsize','mtime', 'fsize','_isdir'];
 
 
     //test
@@ -35,8 +36,12 @@ $(function () {
 
     (function objgen(data){
         let dirpage=[];
+        for(let df in data){
+            console.log(df)
+            let dirrec = new DirRecord(df);
+            console.log(dirrec)
 
-        let dirrec = new DirRecord(dataentr)
+        }
 
     })(filelist);
 
