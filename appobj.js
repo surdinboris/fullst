@@ -2,11 +2,15 @@ $(function () {
     'use strict';
     console.log('app init');
     let files = $("#files")[0];
+
+
     //console.log(filelist);
     //building file object prototype
     function DirRecord(headers,opts){
+        if(opts.filtered == true) return;
+
         //looping via data object and assigning standard attributes
-        this.populheaders.forEach(function (header) {
+        this.activeheaders.forEach(function (header) {
             this[header]=headers[header]
         },this);
 
@@ -14,41 +18,49 @@ $(function () {
         this.filtered=opts.filtered;
 
         //computation and appending calculated attributes
-        if(headers._isdir == true){
-            this.icon="/images/directory.svg"
-        }
-        if(headers.fdtype == false){
-            this.icon="/images/file.svg"
-        }
-        let splitted = this.fullname.split(/(?=\\)/g);
-        console.log(splitted);
+        headers._isdir? this.icon="/images/directory.svg": this.icon="/images/file.svg";
+
+        let splitted = this.fullname.split(/(?=\/)/g);
         this.fdname=splitted[splitted.length-1];
         splitted.pop();
-        this.parenturl = splitted.join("")
+        if(splitted.length == 0 ){
+            this.parenturl = "/"
+        }
+        else{
+            this.parenturl = splitted.join("");
+        }
+        //aligning mdate
+        let parsed= Date.parse(this.mtime)
+        console.log(parsed.toDateString())
         //changing filesize untits
-        if(opts.sizeunit == 'Kb'){
-            this.fsize = Number(this.fsize)/1024
+        if(opts.size && opts.sizeunit == 'Kb'){
+            this.fsize = (Number(this.fsize)/1024).toFixed(1)
         }
     }
     //standard attributes interface definition for looping via data object
-    DirRecord.prototype.populheaders = ['fullname','fsize','mtime','_isdir'];
+
 
     function objgen(data){
-        let dirpage=[];
-        let headers=data.headers;
+        let activeheaders=['fullname','fsize','mtime','_isdir'];
+        //let activeheaders=['fullname','fsize'];
+        DirRecord.prototype.activeheaders = activeheaders;
+        let allheaders=data.headers;
         delete data.headers;
+        let dirpage=[];
+
         for(let df in data){
-            let dirrec = new DirRecord(data[df],{filtered:false, sizeunit:'Kb});
+            let dirrec = new DirRecord(data[df],{filtered:false, sizeunit:'Kb'});
             dirpage.push(dirrec);
         }
         return dirpage
     }
 
-    let dirpage=objgen(filelist);
-    console.log(dirpage);
 
     function render(filelist) {
         files.innerHTML = '';
+        let dirrecs=objgen(filelist);
+        console.log(dirrecs);
+
     }
 
     //initial render
