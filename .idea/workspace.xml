@@ -49,8 +49,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/appobj.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="598">
-              <caret line="33" column="36" selection-start-line="33" selection-start-column="36" selection-end-line="33" selection-end-column="36" />
+            <state relative-caret-position="326">
+              <caret line="55" lean-forward="true" selection-start-line="55" selection-end-line="55" />
             </state>
           </provider>
         </entry>
@@ -114,11 +114,11 @@
     <other-services-enabled>true</other-services-enabled>
     <auto-save>true</auto-save>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1440" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-83" />
     <option name="y" value="22" />
     <option name="width" value="1920" />
-    <option name="height" value="1058" />
+    <option name="height" value="878" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -268,12 +268,12 @@
       <workItem from="1550988577123" duration="7953000" />
       <workItem from="1551120188992" duration="672000" />
       <workItem from="1551371109487" duration="21945000" />
-      <workItem from="1551534261220" duration="34147000" />
+      <workItem from="1551534261220" duration="36382000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="132690000" />
+    <option name="totallyTimeSpent" value="134925000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -285,7 +285,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1440" y="22" width="1920" height="1058" extended-state="6" />
+    <frame x="-83" y="22" width="1920" height="878" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13258786" />
@@ -298,7 +298,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.48443338" weight="0.24521072" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.7699005" weight="0.18818681" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.83457714" visible="true" weight="0.24016564" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.83457714" visible="true" weight="0.2951654" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3299363" />
@@ -434,8 +434,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/appobj.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="598">
-          <caret line="33" column="36" selection-start-line="33" selection-start-column="36" selection-end-line="33" selection-end-column="36" />
+        <state relative-caret-position="326">
+          <caret line="55" lean-forward="true" selection-start-line="55" selection-end-line="55" />
         </state>
       </provider>
     </entry>

@@ -31,14 +31,17 @@ $(function () {
         }
         //aligning mdate
         let parsed= Date.parse(this.mtime)
-        console.log(parsed.toDateString())
         //changing filesize untits
         if(opts.size && opts.sizeunit == 'Kb'){
             this.fsize = (Number(this.fsize)/1024).toFixed(1)
         }
     }
     //standard attributes interface definition for looping via data object
+    DirRecord.gethtml= function(){
 
+    };
+
+    
 
     function objgen(data){
         let activeheaders=['fullname','fsize','mtime','_isdir'];
