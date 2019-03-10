@@ -21,7 +21,7 @@ $(function () {
         headers._isdir? this.icon="/images/directory.svg": this.icon="/images/file.svg";
 
         let splitted = this.fullname.split(/(?=\/)/g);
-        this.fdname=splitted[splitted.length-1];
+        this.fdname=splitted[splitted.length-1].replace('/','');
         splitted.pop();
         if(splitted.length == 0 ){
             this.parenturl = "/"
@@ -37,11 +37,24 @@ $(function () {
         }
     }
     //standard attributes interface definition for looping via data object
-    DirRecord.gethtml= function(){
-
+    DirRecord.prototype.gethtml= function(){
+        let container = document.createElement("div");
+        this.activeheaders.forEach(function(header){
+            if(header == 'fullname'){
+                let anchor = document.createElement("a");
+                anchor.setAttribute('href', this[header]);
+                anchor.classList.add('filename');
+                container.appendChild(anchor);
+                console.log(anchor)
+            }
+            else{
+                container.appendChild(document.createTextNode(this[header]))
+            }
+    },this);
+        return container
     };
 
-    
+
 
     function objgen(data){
         let activeheaders=['fullname','fsize','mtime','_isdir'];
@@ -62,6 +75,10 @@ $(function () {
     function render(filelist) {
         files.innerHTML = '';
         let dirrecs=objgen(filelist);
+        dirrecs.forEach(function (record) {
+            files.appendChild(record.gethtml())
+
+        });
         console.log(dirrecs);
 
     }
