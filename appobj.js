@@ -11,11 +11,6 @@ $(function () {
         this.activeheaders.forEach(function (header) {
             this[header]=headers[header]
         },this);
-
-        if(headers.fsize == 'Size'){
-            console.log(headers.fsize)
-            return this
-        }
         //adding optional passed attrs
         this.filtered=opts.filtered;
         //computation and appending calculated attributes
@@ -31,11 +26,15 @@ $(function () {
             this.parenturl = splitted.join("");
         }
         //formatting mdate
-        let dt= new Date(this.mtime);
-        this.mtime=`${dt.getDay()}/${dt.getMonth()}/${dt.getFullYear()} 
+        console.log(this)
+        if(this.mtime !="Modified"){
+            let dt= new Date(this.mtime);
+            this.mtime=`${dt.getDay()}/${dt.getMonth()}/${dt.getFullYear()} 
         ${dt.getHours()}:${(dt.getMinutes()<10?'0':'') + dt.getMinutes()}`;
+
+        }
+
         //changing filesize untits
-        console.log();
         this.sizeunit=opts.sizeunit;
         if(this.fsize >= 0&& opts.sizeunit == 'Kb'){
 
@@ -44,11 +43,11 @@ $(function () {
     }
 
     //standard attributes interface definition for looping via data object
-    DirRecord.prototype.gethtml= function(returnclass){
+    DirRecord.prototype.gethtml= function(){
         let container = document.createElement("tr");
         this.activeheaders.forEach(function(header, ind){
             let entry = document.createElement('td');
-            if(header == 'fullname'){
+            if(header == 'fullname' && this[header] != "Name"){
                 let anchor = document.createElement("a");
                 anchor.setAttribute('href', this[header]);
                 anchor.appendChild(document.createTextNode(this.fdname));
@@ -71,8 +70,6 @@ $(function () {
         let activeheaders=['fullname','fsize','mtime'];
         //let activeheaders=['fullname','fsize'];
         DirRecord.prototype.activeheaders = activeheaders;
-        let allheaders=data.headers;
-        delete data.headers;
         let dirpage=[];
         for(let df in data){
             let dirrec = new DirRecord(data[df],{'filtered':false, 'sizeunit':'Kb'});
@@ -84,7 +81,6 @@ $(function () {
 
     function render(filelist) {
         files.innerHTML = '';
-        let theaders =objgen({'headers':filelist.headers});
         let dirrecs=objgen(filelist);
         dirrecs.forEach(function (record, ind) {
             let htmlrec=record.gethtml();
@@ -94,7 +90,6 @@ $(function () {
         });
 
         console.log(dirrecs);
-        console.log(theaders)
 
     }
 
