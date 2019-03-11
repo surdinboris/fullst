@@ -1,13 +1,7 @@
 html{
     background-color: #b4a980;
 }
-.grid-container {
-    width: 600px;
-    display: grid;
-    grid-template-columns: auto auto auto;
-    /*background-color: #2196F3;*/
-    padding: 2px;
-}
+
 .header{
     font-weight: bold;
     padding: 7px;

@@ -1,0 +1,27 @@
+.fullname a,.fullname a:visited{
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+.fullname a:hover{
+color: red;
+}
+
+.entry div {
+    display: inline;
+}
+
+#files{
+    border-collapse: collapse;
+}
+
+.col0{
+   border-right: solid black 1px;
+}
+.col1{
+    border-right: solid black 1px;
+}
+tr{
+    border-bottom: solid black 1px;
+}
+

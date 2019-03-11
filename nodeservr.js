@@ -85,7 +85,7 @@ let server=http.createServer(async function (request,response) {
             response.end(`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
         }
         if (isdir && isRestURL(request.url)){
-            console.log('resttt',url)
+            console.log('resttt',url);
             let filelistobj = await getfilelist(url);
             filelistobj = JSON.stringify(filelistobj);
             response.end(filelistobj)

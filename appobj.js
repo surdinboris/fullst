@@ -3,20 +3,15 @@ $(function () {
     console.log('app init');
     let files = $("#files")[0];
 
-
-    //console.log(filelist);
     //building file object prototype
     function DirRecord(headers,opts){
         if(opts.filtered == true) return;
-
         //looping via data object and assigning standard attributes
         this.activeheaders.forEach(function (header) {
             this[header]=headers[header]
         },this);
-
         //adding optional passed attrs
         this.filtered=opts.filtered;
-
         //computation and appending calculated attributes
         headers._isdir? this.icon="/images/directory.svg": this.icon="/images/file.svg";
 
@@ -29,18 +24,24 @@ $(function () {
         else{
             this.parenturl = splitted.join("");
         }
-        //aligning mdate
-        let parsed= Date.parse(this.mtime)
+        //formatting mdate
+        let dt= new Date(this.mtime);
+        this.mtime=`${dt.getDay()}/${dt.getMonth()}/${dt.getFullYear()} 
+        ${dt.getHours()}:${(dt.getMinutes()<10?'0':'') + dt.getMinutes()}`;
         //changing filesize untits
-        if(opts.fsize && opts.sizeunit == 'Kb'){
-            this.fsize = (Number(this.fsize)/1024).toFixed(1)
+        console.log();
+        this.sizeunit=opts.sizeunit;
+        if(this.fsize >= 0&& opts.sizeunit == 'Kb'){
+
+            this.fsize = `${(Number(this.fsize)/1024).toFixed(1)} Kb`
         }
     }
+
     //standard attributes interface definition for looping via data object
-    DirRecord.prototype.gethtml= function(){
-        let container = document.createElement("div");
-        this.activeheaders.forEach(function(header){
-            let entry = document.createElement('div');
+    DirRecord.prototype.gethtml= function(returnclass){
+        let container = document.createElement("tr");
+        this.activeheaders.forEach(function(header, ind){
+            let entry = document.createElement('td');
             if(header == 'fullname'){
                 let anchor = document.createElement("a");
                 anchor.setAttribute('href', this[header]);
@@ -49,12 +50,11 @@ $(function () {
                 entry.appendChild(anchor)
             }
             else {
-
                 entry.appendChild(document.createTextNode(this[header]));
             }
             entry.classList.add(header);
-            container.appendChild(entry)
-
+            entry.setAttribute('id', `col${ind}`);
+            container.appendChild(entry);
     },this);
         return container
     };
@@ -68,9 +68,8 @@ $(function () {
         let allheaders=data.headers;
         delete data.headers;
         let dirpage=[];
-
         for(let df in data){
-            let dirrec = new DirRecord(data[df],{filtered:false, sizeunit:'Kb'});
+            let dirrec = new DirRecord(data[df],{'filtered':false, 'sizeunit':'Kb'});
             dirpage.push(dirrec);
         }
         return dirpage
@@ -79,12 +78,18 @@ $(function () {
 
     function render(filelist) {
         files.innerHTML = '';
-        let dirrecs=objgen(filelist);
-        dirrecs.forEach(function (record) {
-            files.appendChild(record.gethtml())
+        let theaders =objgen(filelist.headers);
 
+        let dirrecs=objgen(filelist);
+        dirrecs.forEach(function (record, ind) {
+            let htmlrec=record.gethtml();
+            htmlrec.setAttribute('id',`row${ind}`);
+            htmlrec.classList.add('entry', 'row');
+            files.appendChild(htmlrec);
         });
+
         console.log(dirrecs);
+        console.log(theaders)
 
     }
 
