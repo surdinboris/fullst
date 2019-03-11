@@ -21,7 +21,7 @@ $(function () {
         headers._isdir? this.icon="/images/directory.svg": this.icon="/images/file.svg";
 
         let splitted = this.fullname.split(/(?=\/)/g);
-        this.fdname=splitted[splitted.length-1].replace('/','');
+        this.fdname=splitted[splitted.length-1].replace('\\','');
         splitted.pop();
         if(splitted.length == 0 ){
             this.parenturl = "/"
@@ -32,7 +32,7 @@ $(function () {
         //aligning mdate
         let parsed= Date.parse(this.mtime)
         //changing filesize untits
-        if(opts.size && opts.sizeunit == 'Kb'){
+        if(opts.fsize && opts.sizeunit == 'Kb'){
             this.fsize = (Number(this.fsize)/1024).toFixed(1)
         }
     }
@@ -40,16 +40,21 @@ $(function () {
     DirRecord.prototype.gethtml= function(){
         let container = document.createElement("div");
         this.activeheaders.forEach(function(header){
+            let entry = document.createElement('div');
             if(header == 'fullname'){
                 let anchor = document.createElement("a");
                 anchor.setAttribute('href', this[header]);
+                anchor.appendChild(document.createTextNode(this.fdname));
                 anchor.classList.add('filename');
-                container.appendChild(anchor);
-                console.log(anchor)
+                entry.appendChild(anchor)
             }
-            else{
-                container.appendChild(document.createTextNode(this[header]))
+            else {
+
+                entry.appendChild(document.createTextNode(this[header]));
             }
+            entry.classList.add(header);
+            container.appendChild(entry)
+
     },this);
         return container
     };
@@ -57,7 +62,7 @@ $(function () {
 
 
     function objgen(data){
-        let activeheaders=['fullname','fsize','mtime','_isdir'];
+        let activeheaders=['fullname','fsize','mtime'];
         //let activeheaders=['fullname','fsize'];
         DirRecord.prototype.activeheaders = activeheaders;
         let allheaders=data.headers;
