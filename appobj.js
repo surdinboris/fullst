@@ -6,10 +6,16 @@ $(function () {
     //building file object prototype
     function DirRecord(headers,opts){
         if(opts.filtered == true) return;
+
         //looping via data object and assigning standard attributes
         this.activeheaders.forEach(function (header) {
             this[header]=headers[header]
         },this);
+
+        if(headers.fsize == 'Size'){
+            console.log(headers.fsize)
+            return this
+        }
         //adding optional passed attrs
         this.filtered=opts.filtered;
         //computation and appending calculated attributes
@@ -18,7 +24,7 @@ $(function () {
         let splitted = this.fullname.split(/(?=\/)/g);
         this.fdname=splitted[splitted.length-1].replace('\\','');
         splitted.pop();
-        if(splitted.length == 0 ){
+        if(splitted.length == 0){
             this.parenturl = "/"
         }
         else{
@@ -78,8 +84,7 @@ $(function () {
 
     function render(filelist) {
         files.innerHTML = '';
-        let theaders =objgen(filelist.headers);
-
+        let theaders =objgen({'headers':filelist.headers});
         let dirrecs=objgen(filelist);
         dirrecs.forEach(function (record, ind) {
             let htmlrec=record.gethtml();
