@@ -89,15 +89,13 @@ $(function () {
         }
         //let emptyrow= objgen({'emptyrow':{'fsize':'','fullname': '', 'mtime':''}});
         //rowgen(emptyrow);
-
         let dirrecs=objgen(filelist);
         rowappend(dirrecs);
-
         //inserting empty row with up url
         //up url preparation
         let lastelem= dirrecs[dirrecs.length-1].parenturl;
         let splitted= lastelem.split(/(?=\\)/g);
-        let uplink=''
+        let uplink='';
         if(splitted[0] == '\\'){
             uplink = '\\'
         }
@@ -124,10 +122,6 @@ $(function () {
         goup.appendChild(document.createTextNode('...'));
         container.firstChild.appendChild(goup);
         insertAfter(container,headrow)
-
-
-        // insertAfter()
-
     }
 
     //initial render
