@@ -39,14 +39,12 @@ async function getfilelist(url){
 
     for (let i = 0; i < filelist.length; i++) {
         let filest = await stat(join(filepath, filelist[i]));
-        // console.log(filest);
         filelistobj[filelist[i]] = {};
         filelistobj[filelist[i]].fullname = join(url, filelist[i]);
         filelistobj[filelist[i]].fsize = filest.size;
         filelistobj[filelist[i]].mtime = filest.mtime;
         filelistobj[filelist[i]]._isdir = filest.isDirectory();
     }
-
     return filelistobj
 }
 

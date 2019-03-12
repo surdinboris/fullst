@@ -17,9 +17,11 @@ $(function () {
         //adding optional passed attrs
         this.filtered=opts.filtered;
         //computation and appending calculated attributes
-        headers._isdir? this.icon="\\images\\directory.svg": this.icon="\\images\\file.svg";
-        let splitted = this.fullname.split(/(?=\\)/g);
-        this.fdname=splitted[splitted.length-1].replace('\\','');
+        headers._isdir? this.icon="/": this.icon="/images/file.svg";
+        let splitted = this.fullname.split(/(?=\/)/g);
+        console.log(splitted)
+        this.fdname=splitted[splitted.length-1].replace('/','');
+        console.log(this.fdname)
         splitted.pop();
         if(splitted.length == 0){
             this.parenturl = "/"
@@ -43,6 +45,7 @@ $(function () {
     }
     //standard attributes interface definition for looping via data object
     DirRecord.prototype.gethtml= function(){
+        console.log(this);
         let container = document.createElement("tr");
         this.activeheaders.forEach(function(header, ind){
             let entry = document.createElement('td');
@@ -94,17 +97,17 @@ $(function () {
         //inserting empty row with up url
         //up url preparation
         let lastelem= dirrecs[dirrecs.length-1].parenturl;
-        let splitted= lastelem.split(/(?=\\)/g);
+        let splitted= lastelem.split(/(?=\/)/g);
         let uplink='';
-        if(splitted[0] == '\\'){
-            uplink = '\\'
+        if(splitted[0] == '/'){
+            uplink = '/'
         }
         else if (splitted.length > 1){
             splitted.pop();
             uplink=splitted.join('');
         }
         else{
-            uplink = '\\'
+            uplink = '/'
         }
         //row insertion point
         let headrow=$('#row0')[0];
