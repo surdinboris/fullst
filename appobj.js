@@ -111,35 +111,35 @@ $(function () {
         rowappend(dirrecs);
         //inserting empty row with up url
         //up url preparation
-        let lastelem= dirrecs[dirrecs.length-1].parenturl;
-        let splitted= lastelem.split(/(?=\/)/g);
-        let uplink='';
-        if(splitted[0] == '/'){
-            uplink = '/'
-        }
-        else if (splitted.length > 1){
-            splitted.pop();
-            uplink=splitted.join('');
-        }
-        else{
-            uplink = '/'
-        }
-        //row insertion point
-        let headrow=$('#row0')[0];
-        //generating html
-        let container = document.createElement("tr");
-        container.setAttribute('id', 'emptyrow');
-        for(let headr in DirRecord.prototype.activeheaders){
-            let cell = document.createElement('td');
-            cell.classList.add(`col${headr}`);
-            container.appendChild(cell)
-        }
-        let goup = document.createElement('a');
-        goup.setAttribute('href',uplink)
-        goup.setAttribute('id', 'goupurl');
-        goup.appendChild(document.createTextNode('...'));
-        container.firstChild.appendChild(goup);
-        insertAfter(container,headrow)
+        // let lastelem= dirrecs[dirrecs.length-1].parenturl;
+        // let splitted= lastelem.split(/(?=\/)/g);
+        // let uplink='';
+        // if(splitted[0] == '/'){
+        //     uplink = '/'
+        // }
+        // else if (splitted.length > 1){
+        //     splitted.pop();
+        //     uplink=splitted.join('');
+        // }
+        // else{
+        //     uplink = '/'
+        // }
+        // //row insertion point
+        // let headrow=$('#row0')[0];
+        // //generating html
+        // let container = document.createElement("tr");
+        // container.setAttribute('id', 'emptyrow');
+        // for(let headr in DirRecord.prototype.activeheaders){
+        //     let cell = document.createElement('td');
+        //     cell.classList.add(`col${headr}`);
+        //     container.appendChild(cell)
+        // }
+        // let goup = document.createElement('a');
+        // goup.setAttribute('href',uplink)
+        // goup.setAttribute('id', 'goupurl');
+        // goup.appendChild(document.createTextNode('...'));
+        // container.firstChild.appendChild(goup);
+        // insertAfter(container,headrow)
     }
 
     //initial render

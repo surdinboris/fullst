@@ -35,8 +35,29 @@ async function getfilelist(url){
     filelistobj.headers.fsize = 'Size';
     filelistobj.headers.mtime = 'Modified';
 
+    //adding up shortcut
+    let splitted= url.split(/(?=\/)/g);
+    let uplink='';
+    if(splitted[0] == '/'){
+        uplink = '/'
+    }
+    else if (splitted.length > 1){
+        splitted.pop();
+        uplink=splitted.join('');
+    }
+    else{
+        uplink = '/'
+    }
+    filelistobj['emptyrow'] = {};
+    filelistobj['emptyrow'].fullname = uplink;
+    filelistobj['emptyrow'].fsize = '';
+    filelistobj['emptyrow'].mtime = '';
+    filelistobj['emptyrow']._isdir = true;
+
+
     for (let i = 0; i < filelist.length; i++) {
         let filest = await stat(join(filepath, filelist[i]));
+
         filelistobj[filelist[i]] = {};
         filelistobj[filelist[i]].fullname = urljoin(url, filelist[i]);
         filelistobj[filelist[i]].fsize = filest.size;
