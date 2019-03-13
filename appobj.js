@@ -65,6 +65,7 @@ $(function () {
                             e.preventDefault();
                             let url = e.target.getAttribute('href');
                             let data = await getrestdata(url);
+                        window.history.pushState("object or string", "Title", url);
                             render(JSON.parse(data), url)
                     });
                 }
