@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="51a52083-a6cd-4a11-8331-e60c1aaaa50b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/appobj.js" afterPath="$PROJECT_DIR$/appobj.js" />
-    </list>
+    <list default="true" id="51a52083-a6cd-4a11-8331-e60c1aaaa50b" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,8 +17,8 @@
             <file leaf-file-name="appobj.js" pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/appobj.js">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="396">
-                    <caret line="59" column="68" lean-forward="true" selection-start-line="59" selection-start-column="68" selection-end-line="59" selection-end-column="68" />
+                  <state relative-caret-position="198">
+                    <caret line="45" column="4" lean-forward="false" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
                     <folding />
                   </state>
                 </provider>
@@ -33,21 +31,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="nodeservr.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="nodeservr.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nodeservr.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="494">
-              <caret line="43" column="8" lean-forward="false" selection-start-line="43" selection-start-column="8" selection-end-line="43" selection-end-column="8" />
+            <state relative-caret-position="274">
+              <caret line="33" column="40" lean-forward="true" selection-start-line="33" selection-start-column="40" selection-end-line="33" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="318">
-              <caret line="31" column="49" lean-forward="false" selection-start-line="27" selection-start-column="26" selection-end-line="32" selection-end-column="53" />
+            <state relative-caret-position="273">
+              <caret line="142" column="0" lean-forward="false" selection-start-line="142" selection-start-column="0" selection-end-line="147" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -93,9 +91,9 @@
       <find>stat</find>
       <find>rest</find>
       <find>initial</find>
-      <find>console</find>
       <find>cons</find>
       <find>event</find>
+      <find>console</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -120,13 +118,13 @@
         <option value="$PROJECT_DIR$/fileview.css" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/style/appobj.js" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/style/cssplgrstyle.css" />
         <option value="$PROJECT_DIR$/style/fileview.css" />
         <option value="$PROJECT_DIR$/fileview.html" />
         <option value="$PROJECT_DIR$/filevewstyle.css" />
         <option value="$PROJECT_DIR$/nodeservr.js" />
         <option value="$PROJECT_DIR$/appobj.js" />
+        <option value="$PROJECT_DIR$/app.js" />
       </list>
     </option>
   </component>
@@ -143,8 +141,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-976" />
-    <option name="y" value="221" />
+    <option name="x" value="-957" />
+    <option name="y" value="219" />
     <option name="width" value="1411" />
     <option name="height" value="863" />
   </component>
@@ -330,7 +328,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="152412000" />
+    <option name="totallyTimeSpent" value="153188000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -342,7 +340,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-976" y="221" width="1411" height="863" extended-state="0" />
+    <frame x="-957" y="219" width="1411" height="863" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -588,26 +586,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
+    <entry file="file://$PROJECT_DIR$/nodeservr.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="31" column="49" lean-forward="false" selection-start-line="27" selection-start-column="26" selection-end-line="32" selection-end-column="53" />
+        <state relative-caret-position="274">
+          <caret line="33" column="40" lean-forward="true" selection-start-line="33" selection-start-column="40" selection-end-line="33" selection-end-column="40" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nodeservr.js">
+    <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="43" column="8" lean-forward="false" selection-start-line="43" selection-start-column="8" selection-end-line="43" selection-end-column="8" />
+        <state relative-caret-position="273">
+          <caret line="142" column="0" lean-forward="false" selection-start-line="142" selection-start-column="0" selection-end-line="147" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/appobj.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="59" column="68" lean-forward="true" selection-start-line="59" selection-start-column="68" selection-end-line="59" selection-end-column="68" />
+        <state relative-caret-position="198">
+          <caret line="45" column="4" lean-forward="false" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
           <folding />
         </state>
       </provider>
