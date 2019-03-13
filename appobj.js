@@ -4,11 +4,11 @@ $(function () {
     let files = $("#files")[0];
 
     //building file object prototype
-    function DirRecord(headers,opts){
+    function DirRecord(entries,opts){
         if(opts.filtered == true) return;
         //looping via data object and assigning standard attributes
         this.activeheaders.forEach(function (header) {
-            this[header]=headers[header]
+            this[header]=entries[header]
         },this);
         // if(headers.emptyrow){
         //     return this
@@ -16,9 +16,10 @@ $(function () {
 
         //adding optional passed attrs
         this.filtered=opts.filtered;
-        this._isdir = headers._isdir;
+        this._isdir = entries._isdir;
+        this._meta = entries._meta;
         //computation and appending calculated attributes
-        headers._isdir? this.icon="/": this.icon="/images/file.svg";
+        entries._isdir? this.icon="/": this.icon="/images/file.svg";
         let splitted = this.fullname.split(/(?=\/)/g);
         this.fdname=splitted[splitted.length-1].replace('/','');
         splitted.pop();
@@ -41,6 +42,7 @@ $(function () {
 
             this.fsize = `${(Number(this.fsize)/1024).toFixed(1)} Kb`
         }
+        console.log(this)
     }
 
     function getrestdata(url){
@@ -57,8 +59,15 @@ $(function () {
             if(header == 'fullname' && this[header] != "Name"){
                 let anchor = document.createElement("a");
                 anchor.setAttribute('href', this[header]);
-                anchor.appendChild(document.createTextNode(this.fdname));
-                anchor.classList.add('filename');
+                if(this._meta == 'regular_record'){
+                    anchor.appendChild(document.createTextNode(this.fdname));
+                    anchor.classList.add('filename');
+                }
+                if(this._meta == 'uplink'){
+                    anchor.appendChild(document.createTextNode('...'));
+                    anchor.classList.add('uplink');
+                }
+
                 if(this._isdir == true ) {
                     anchor.addEventListener("click", async function (e) {
                         console.log(this);

@@ -53,6 +53,7 @@ async function getfilelist(url){
     filelistobj['emptyrow'].fsize = '';
     filelistobj['emptyrow'].mtime = '';
     filelistobj['emptyrow']._isdir = true;
+    filelistobj['emptyrow']._meta = 'uplink';
 
 
     for (let i = 0; i < filelist.length; i++) {
@@ -63,6 +64,7 @@ async function getfilelist(url){
         filelistobj[filelist[i]].fsize = filest.size;
         filelistobj[filelist[i]].mtime = filest.mtime;
         filelistobj[filelist[i]]._isdir = filest.isDirectory();
+        filelistobj[filelist[i]]._meta = 'regular_record';
     }
     return filelistobj
 }
