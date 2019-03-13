@@ -19,9 +19,7 @@ $(function () {
         //computation and appending calculated attributes
         headers._isdir? this.icon="/": this.icon="/images/file.svg";
         let splitted = this.fullname.split(/(?=\/)/g);
-        console.log(splitted)
         this.fdname=splitted[splitted.length-1].replace('/','');
-        console.log(this.fdname)
         splitted.pop();
         if(splitted.length == 0){
             this.parenturl = "/"
