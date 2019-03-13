@@ -42,6 +42,13 @@ $(function () {
             this.fsize = `${(Number(this.fsize)/1024).toFixed(1)} Kb`
         }
     }
+
+    DirRecord.prototype.getrestdata = function (){
+
+        return fetch('/restapi'+this.fullname).then((resp) => {return resp.text()
+        })
+
+    }
     //standard attributes interface definition for looping via data object
     DirRecord.prototype.gethtml= function(){
         console.log(this);
@@ -58,8 +65,8 @@ $(function () {
                         console.log(e);
                             e.preventDefault();
                             let url = e.target.getAttribute('href');
-                            let data = await getrestdata(url);
-                            //render(JSON.parse(data), url)
+                            let data = await this.getrestdata();
+                            render(JSON.parse(data), url)
                     });
                 }
                 entry.appendChild(anchor)
