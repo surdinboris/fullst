@@ -16,6 +16,7 @@ $(function () {
 
         //adding optional passed attrs
         this.filtered=opts.filtered;
+        this._isdir = headers._isdir;
         //computation and appending calculated attributes
         headers._isdir? this.icon="/": this.icon="/images/file.svg";
         let splitted = this.fullname.split(/(?=\/)/g);
@@ -52,6 +53,15 @@ $(function () {
                 anchor.setAttribute('href', this[header]);
                 anchor.appendChild(document.createTextNode(this.fdname));
                 anchor.classList.add('filename');
+                if(this._isdir == true ) {
+                    anchor.addEventListener("click", async function (e) {
+                        console.log(e);
+                            e.preventDefault();
+                            let url = e.target.getAttribute('href');
+                            let data = await getrestdata(url);
+                            //render(JSON.parse(data), url)
+                    });
+                }
                 entry.appendChild(anchor)
             }
             else {
