@@ -43,15 +43,14 @@ $(function () {
         }
     }
 
-    DirRecord.prototype.getrestdata = function (){
+    function getrestdata(url){
 
-        return fetch('/restapi'+this.fullname).then((resp) => {return resp.text()
+        return fetch('/restapi'+url).then((resp) => {return resp.text()
         })
 
     }
     //standard attributes interface definition for looping via data object
     DirRecord.prototype.gethtml= function(){
-        console.log(this);
         let container = document.createElement("tr");
         this.activeheaders.forEach(function(header, ind){
             let entry = document.createElement('td');
@@ -62,10 +61,10 @@ $(function () {
                 anchor.classList.add('filename');
                 if(this._isdir == true ) {
                     anchor.addEventListener("click", async function (e) {
-                        console.log(e);
+                        console.log(this);
                             e.preventDefault();
                             let url = e.target.getAttribute('href');
-                            let data = await this.getrestdata();
+                            let data = await getrestdata(url);
                             render(JSON.parse(data), url)
                     });
                 }
