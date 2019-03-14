@@ -139,8 +139,20 @@ $(function () {
         // goup.appendChild(document.createTextNode('...'));
         // container.firstChild.appendChild(goup);
         // insertAfter(container,headrow)
+
     }
 
     //initial render
+    $(window).on('popstate', function() {
+        alert('Back button was pressed.');
+        let url = document.location.href;
+        //let data = await getrestdata(url);
+        // window.history.pushState("object or string", "Title", url);
+        //render(JSON.parse(data), url);
+
+    });
+
+
     render(filelist)
+
 });
