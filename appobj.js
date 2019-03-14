@@ -10,10 +10,6 @@ $(function () {
         this.activeheaders.forEach(function (header) {
             this[header]=entries[header]
         },this);
-        // if(headers.emptyrow){
-        //     return this
-        // }
-
         //adding optional passed attrs
         this.filtered=opts.filtered;
         this._isdir = entries._isdir;
@@ -35,18 +31,14 @@ $(function () {
             this.mtime=`${dt.getDay()}/${dt.getMonth()}/${dt.getFullYear()} 
         ${dt.getHours()}:${(dt.getMinutes()<10?'0':'') + dt.getMinutes()}`;
         }
-
         //changing filesize untits
         this.sizeunit=opts.sizeunit;
         if(this.fsize >= 0&& opts.sizeunit == 'Kb'){
-
             this.fsize = `${(Number(this.fsize)/1024).toFixed(1)} Kb`
         }
-        console.log(this)
     }
 
     function getrestdata(url){
-
         return fetch('/restapi'+url).then((resp) => {return resp.text()
         })
 
@@ -67,10 +59,8 @@ $(function () {
                     anchor.appendChild(document.createTextNode('...'));
                     anchor.classList.add('uplink');
                 }
-
-                if(this._isdir == true ) {
+                if(this._isdir == true ){
                     anchor.addEventListener("click", async function (e) {
-                        console.log(this);
                             e.preventDefault();
                             let url = e.target.getAttribute('href');
                             let data = await getrestdata(url);
@@ -80,7 +70,7 @@ $(function () {
                 }
                 entry.appendChild(anchor)
             }
-            else {
+            else if(this._meta != 'uplink') {
                 entry.appendChild(document.createTextNode(this[header]));
             }
             entry.classList.add(header,`col${ind}`);
