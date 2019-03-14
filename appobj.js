@@ -143,12 +143,13 @@ $(function () {
     }
 
     //initial render
-    $(window).on('popstate', function() {
-        alert('Back button was pressed.');
+    $(window).on('popstate', async function(e) {
+        // alert('Back button was pressed.');
+        console.log(document.location.href)
         let url = document.location.href;
-        //let data = await getrestdata(url);
-        // window.history.pushState("object or string", "Title", url);
-        //render(JSON.parse(data), url);
+        let data = await getrestdata(url);
+        window.history.pushState("object or string", "Title", url);
+        render(JSON.parse(data), url);
 
     });
 
