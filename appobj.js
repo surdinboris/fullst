@@ -2,6 +2,7 @@ $(function () {
     'use strict';
     console.log('app init');
     let files = $("#files")[0];
+    let currurl=''
 
     //building file object prototype
     function DirRecord(entries,opts){
@@ -65,6 +66,7 @@ $(function () {
                             let url = e.target.getAttribute('href');
                             let data = await getrestdata(url);
                         window.history.pushState("object or string", "Title", url);
+                        currurl=url;
                             render(JSON.parse(data), url)
                     });
                 }
@@ -145,11 +147,21 @@ $(function () {
     //initial render
     $(window).on('popstate', async function(e) {
         // alert('Back button was pressed.');
-        console.log(document.location.href)
-        let url = document.location.href;
-        let data = await getrestdata(url);
-        window.history.pushState("object or string", "Title", url);
-        render(JSON.parse(data), url);
+        let splitted = currurl.split(/(?=\/)/g);
+        let fdname=splitted[splitted.length-1].replace('/','');
+        let parenturl='';
+        splitted.pop();
+        if(splitted.length == 0){
+            parenturl = "/"
+        }
+        else{
+            parenturl = splitted.join("");
+        }
+        window.history.pushState("object or string", "Title", parenturl);
+        let data = await getrestdata(parenturl);
+        console.log('>>>',parenturl, data);
+        currurl=parenturl;
+        render(JSON.parse(data));
 
     });
 
