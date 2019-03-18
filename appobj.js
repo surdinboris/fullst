@@ -101,9 +101,9 @@ $(function () {
             e.preventDefault();
                 alert("kaka")
             });
-        function insertAfter(newNode, referenceNode) {
-            referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
-        }
+        // function insertAfter(newNode, referenceNode) {
+        //     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+        // }
 
         function rowappend(dirrecs) {
             dirrecs.forEach(function (record, ind) {
