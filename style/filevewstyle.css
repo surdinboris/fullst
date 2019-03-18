@@ -3,10 +3,17 @@
     text-decoration: none;
     font-weight: bold;
 }
-.fullname a:hover{
+.fullname a:hover, #upload:hover{
 color: red;
 }
-
+#upload{
+    text-decoration: none;
+    color: #000000;
+    background-color: #aecab6;
+}
+#cube{
+    margin-top: 10px;
+}
 .entry div {
     display: inline;
 }
@@ -24,4 +31,3 @@ color: red;
 tr{
     border-bottom: solid black 1px;
 }
-

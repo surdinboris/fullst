@@ -2,7 +2,9 @@ $(function () {
     'use strict';
     console.log('app init');
     let files = $("#files")[0];
-    let currurl=''
+    let currurl='';
+
+    let upload = $("#upload")[0];
 
     //building file object prototype
     function DirRecord(entries,opts){
@@ -92,8 +94,13 @@ $(function () {
         }
         return dirpage
     }
+
     function render(filelist) {
         files.innerHTML = '';
+        upload.addEventListener("click", async function (e){
+            e.preventDefault();
+                alert("kaka")
+            });
         function insertAfter(newNode, referenceNode) {
             referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
         }

@@ -6,7 +6,7 @@ const urljoin =require('url-join');
 const baseDirectory = process.cwd();
 const mime = require('mime');
 let http =require('http');
-
+let handlers={};
 function isRestURL(requestUrl) {
     let idfilter = /\/restapi\//;
     let result =idfilter.exec(requestUrl);
@@ -14,6 +14,7 @@ function isRestURL(requestUrl) {
         return result;}
     else return false
 }
+
 function toFSpath(url) {
     let {pathname} = parse(url);
     let filepath = resolve(decodeURIComponent(pathname).slice(1));
@@ -25,16 +26,13 @@ function toFSpath(url) {
     return filepath;
 }
 async function getfilelist(url){
-
     let filepath=toFSpath(url);
     let filelist = await readdir(filepath);
-
     let filelistobj = {};
     filelistobj.headers = {};
     filelistobj.headers.fullname = 'Name';
     filelistobj.headers.fsize = 'Size';
     filelistobj.headers.mtime = 'Modified';
-
     //adding up shortcut
     let splitted= url.split(/(?=\/)/g);
     let uplink='';
@@ -54,11 +52,8 @@ async function getfilelist(url){
     filelistobj['emptyrow'].mtime = '';
     filelistobj['emptyrow']._isdir = true;
     filelistobj['emptyrow']._meta = 'uplink';
-
-
     for (let i = 0; i < filelist.length; i++) {
         let filest = await stat(join(filepath, filelist[i]));
-
         filelistobj[filelist[i]] = {};
         filelistobj[filelist[i]].fullname = urljoin(url, filelist[i]);
         filelistobj[filelist[i]].fsize = filest.size;
@@ -69,60 +64,62 @@ async function getfilelist(url){
     return filelistobj
 }
 
-let server=http.createServer(async function (request,response) {
+handlers['POST']= async function (request,response) {
+console.log('POST', request.url)
+};
 
-    if(request.method == 'GET'){
-        console.log('get url', request.url);
-        let url = request.url;
-        if(isRestURL(request.url)){
 
-            url = request.url.replace(/\/restapi\//, '/');
-            console.log('new url', url)
-        }
-        else{
-            console.log('notresturl')}
 
-        let filepath = toFSpath(url);
-        // console.log('toFSpath',request.url,toFSpath(request.url))
-        let stats;
-        let isdir;
-        try {
-            stats = await stat(filepath);
-            isdir = await stats.isDirectory()
-        } catch (error) {
-            //console.log(error);
-            if (error.code == "ENOENT") {
-                response.writeHead(404, `resource not found ${error}`);
-                return
-            }
-        }
-        if (isdir && isRestURL(request.url) == false) {
-            let filefront = await readFile('fileview.html');
-            let filelistobj = await getfilelist(url);
-            filelistobj = JSON.stringify(filelistobj);
-            console.log(filelistobj)
-            response.write(filefront);
-            response.end(`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
-        }
-        if (isdir && isRestURL(request.url)){
-            let filelistobj = await getfilelist(url);
-            filelistobj = JSON.stringify(filelistobj);
-            response.end(filelistobj)
-        }
-        if (isdir == false) {
-            let mimeType = await mime.getType(filepath);
-            response.setHeader("Content-Type", mimeType);
-            response.end(await readFile(filepath))
-        }
+handlers['GET']=async function (request,response) {
+    console.log('get url', request.url);
+    let url = request.url;
+    if(isRestURL(request.url)){
 
+        url = request.url.replace(/\/restapi\//, '/');
+        console.log('new url', url)
     }
-// if(request.method == 'GET' && isRestURL(request.url)){
-//     // response.setHeader("Content-Type", "text/html");
-//     let filelistobj = await getfilelist(request);
-//     filelistobj = JSON.stringify(filelistobj);
-//     response.end(filelistobj)
-// }
+    else{
+        console.log('notresturl')}
 
+    let filepath = toFSpath(url);
+    // console.log('toFSpath',request.url,toFSpath(request.url))
+    let stats;
+    let isdir;
+    try {
+        stats = await stat(filepath);
+        isdir = await stats.isDirectory()
+    } catch (error) {
+        //console.log(error);
+        if (error.code == "ENOENT"){
+            response.writeHead(404, `resource not found ${error}`);
+            return
+        }
+    }
+    if (isdir && isRestURL(request.url) == false) {
+        let filefront = await readFile('fileview.html');
+        let filelistobj = await getfilelist(url);
+        filelistobj = JSON.stringify(filelistobj);
+        console.log(filelistobj)
+        response.write(filefront);
+        response.end(`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
+    }
+    if (isdir && isRestURL(request.url)){
+        let filelistobj = await getfilelist(url);
+        filelistobj = JSON.stringify(filelistobj);
+        response.end(filelistobj)
+    }
+    if (isdir == false) {
+        let mimeType = await mime.getType(filepath);
+        response.setHeader("Content-Type", mimeType);
+        response.end(await readFile(filepath))
+    }
+
+};
+
+let server=http.createServer(async function (request,response) {
+    if (request.method in handlers){
+        handlers[request.method](request,response)
+    }
 });
 
 
