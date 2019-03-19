@@ -3,8 +3,14 @@ $(function () {
     console.log('app init');
     let files = $("#files")[0];
     let currurl='';
+    // let upload = $("#upload")[0];
+    let uploaddialog=$("#uploadcont")[0];
 
-    let upload = $("#upload")[0];
+    function drawpopup() {
+        let popup = document.getElementById("uploaddialog");
+        console.log(popup)
+        popup.classList.toggle("show");
+    }
 
     //building file object prototype
     function DirRecord(entries,opts){
@@ -97,10 +103,15 @@ $(function () {
 
     function render(filelist) {
         files.innerHTML = '';
-        upload.addEventListener("click", async function (e){
-            e.preventDefault();
-                alert("kaka")
-            });
+        // upload.addEventListener("click", async function (e){
+        //     e.preventDefault();
+        //         alert("kaka")
+        //     });
+        uploadcont.addEventListener("click", function (e) {
+            console.log(e)
+            drawpopup()
+        });
+
         // function insertAfter(newNode, referenceNode) {
         //     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
         // }
