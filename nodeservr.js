@@ -117,6 +117,7 @@ handlers['GET']=async function (request,response) {
 };
 
 let server=http.createServer(async function (request,response) {
+    console.log('new request retrieved', request);
     if (request.method in handlers){
         handlers[request.method](request,response)
     }

@@ -8,10 +8,12 @@ $(function () {
 
     function drawpopup() {
         let popup = document.getElementById("uploaddialog");
-        console.log(popup)
-        popup.classList.toggle("show");
+        popup.classList.add("show");
     }
-
+    function hidepopup() {
+        let popup = document.getElementById("uploaddialog");
+        popup.classList.remove("show");
+    }
     //building file object prototype
     function DirRecord(entries,opts){
         if(opts.filtered == true) return;
@@ -108,7 +110,6 @@ $(function () {
         //         alert("kaka")
         //     });
         uploadcont.addEventListener("click", function (e) {
-            console.log(e)
             drawpopup()
         });
 
