@@ -1,3 +1,7 @@
+html {
+    box-sizing:content-box;
+}
+
 .fullname a,.fullname a:visited{
     color: black;
     text-decoration: none;
@@ -41,16 +45,40 @@ tr{
     display: inline-block;
     cursor: pointer;
 }
-#uploadinput, #uploadbutt{
-    display: block;
+#uploadform{
+    position: relative;
+    height: 100%;
+}
+#uploaddialog{
+    padding: 0;
+    margin: 0;
+}
+#uploadinput{
+    width: 100%;
+    margin:5px;
+    font-size: 10px;
+
+}
+#buttcont{
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+#uploadbutt{
+    font-size: 10px;
+    /*margin: 0 5%*/
 }
 /* The actual popup (appears on top) */
 .upload .uploadtext {
     visibility: hidden;
-    width: 300px;
+    width: 200px;
     height: 70px;
-    background-color: #ffd69e;
-    color: #fff;
+    background-color: #c3cdcf;
+    color: #000000;
     text-align: center;
     border-radius: 6px;
     border: solid 1px black;

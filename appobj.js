@@ -9,6 +9,17 @@ $(function () {
     function drawpopup() {
         let popup = document.getElementById("uploaddialog");
         popup.classList.add("show");
+        let uplbutt=$("#uploadbutt")[0];
+        console.log(uplbutt)
+
+        uplbutt.addEventListener('click', function (e) {
+            //rest sending
+            console.log('event upl butt',e);
+            e.preventDefault();
+
+            let resp= fetch('/upload');
+            resp.then(r=>console.log(r))
+        })
     }
     function hidepopup() {
         let popup = document.getElementById("uploaddialog");
