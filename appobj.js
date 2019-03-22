@@ -4,21 +4,26 @@ $(function () {
     let files = $("#files")[0];
     let currurl='';
     // let upload = $("#upload")[0];
-    let uploaddialog=$("#uploadcont")[0];
+    let uploadinput=$("#uploadinput")[0];
+
+    let req = new XMLHttpRequest();
 
     function drawpopup() {
         let popup = document.getElementById("uploaddialog");
         popup.classList.add("show");
         let uplbutt=$("#uploadbutt")[0];
-        console.log(uplbutt)
+
+
+
 
         uplbutt.addEventListener('click', function (e) {
             //rest sending
             console.log('event upl butt',e);
             e.preventDefault();
+            console.log(uploadinput.files);
 
-            let resp= fetch('/upload');
-            resp.then(r=>console.log(r))
+            // let resp= fetch('/upload');
+            // resp.then(r=>console.log(r))
         })
     }
     function hidepopup() {
