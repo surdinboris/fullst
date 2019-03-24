@@ -2,7 +2,7 @@ $(function () {
     'use strict';
     console.log('app init');
     let files = $("#files")[0];
-    let currurl='';
+    let currurl='/'+window.location.href.replace(/^(?:\/\/|[^\/]+)*\//, "");
     // let upload = $("#upload")[0];
 
     let req = new XMLHttpRequest();
@@ -10,12 +10,13 @@ $(function () {
     function drawpopup() {
         let popup = document.getElementById("uploaddialog");
         popup.classList.add("show");
-
     }
 
     function hidepopup() {
         let popup = document.getElementById("uploaddialog");
-        popup.classList.remove("show");
+
+        //popup.classList.toggle("hiden");
+        console.log(popup)
     }
     //building file object prototype
     function DirRecord(entries,opts){
@@ -107,45 +108,28 @@ $(function () {
     }
 
     function render(filelist) {
-        //boilerplate cloning for cleaning upload elements from previous listeners
         let uploadcont = $("#uploadcont")[0];
         let uploadcontClone=uploadcont.cloneNode(true);
-        uploadcont.parentNode.replaceChild(uploadcontClone, uploadcont);
-        uploadcont = $("#uploadcont")[0];
 
         let uploadinput=$("#uploadinput")[0];
         let uplbutt=$("#uploadbutt")[0];
         //cleaning filetable content
         files.innerHTML = '';
+        //boilerplate cloning for cleaning upload elements from previous listeners
+        uploadcont.parentNode.replaceChild(uploadcontClone, uploadcont);
+        uploadcont = $("#uploadcont")[0];
+
+
+        let clsupload = $("#clseupload")[0];
+        clsupload.addEventListener("click", function(e){
+            hidepopup();
+
+        });
         // upload.addEventListener("click", async function (e){
         //     e.preventDefault();
         //         alert("kaka")
         //     });
-        uploadcont.addEventListener("click", function (e) {
-            drawpopup()
-            //!implement popup closing (X button or click aside)
-        });
 
-        let evhandler = uplbutt.addEventListener('click', function (e) {
-            //rest sending
-            e.preventDefault();
-            const fd = new FormData();
-            let files=uploadinput.files;
-
-            if (files.length) {
-                let flkeys = Object.keys(uploadinput.files);
-                flkeys.forEach((file) => {
-                    console.log(files[file]);
-                    fd.append(file.name, file, file.name)
-                })
-
-            }
-            else alert("Please choose files to upload")
-
-
-            // let resp= fetch('/upload');
-            // resp.then(r=>console.log(r))
-        });
 
         // function insertAfter(newNode, referenceNode) {
         //     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
@@ -163,38 +147,40 @@ $(function () {
         //rowgen(emptyrow);
         let dirrecs=objgen(filelist);
         rowappend(dirrecs);
-        //inserting empty row with up url
-        //up url preparation
-        // let lastelem= dirrecs[dirrecs.length-1].parenturl;
-        // let splitted= lastelem.split(/(?=\/)/g);
-        // let uplink='';
-        // if(splitted[0] == '/'){
-        //     uplink = '/'
-        // }
-        // else if (splitted.length > 1){
-        //     splitted.pop();
-        //     uplink=splitted.join('');
-        // }
-        // else{
-        //     uplink = '/'
-        // }
-        // //row insertion point
-        // let headrow=$('#row0')[0];
-        // //generating html
-        // let container = document.createElement("tr");
-        // container.setAttribute('id', 'emptyrow');
-        // for(let headr in DirRecord.prototype.activeheaders){
-        //     let cell = document.createElement('td');
-        //     cell.classList.add(`col${headr}`);
-        //     container.appendChild(cell)
-        // }
-        // let goup = document.createElement('a');
-        // goup.setAttribute('href',uplink)
-        // goup.setAttribute('id', 'goupurl');
-        // goup.appendChild(document.createTextNode('...'));
-        // container.firstChild.appendChild(goup);
-        // insertAfter(container,headrow)
 
+        uploadcont.addEventListener("click", function (e) {
+            drawpopup()
+            //!implement popup closing (X button or click aside)
+        });
+
+        uplbutt.addEventListener('click', function (e) {
+            //rest sending
+            e.preventDefault();
+            const fd = new FormData();
+            let files=uploadinput.files;
+
+            if (files.length) {
+                let flkeys = Object.keys(uploadinput.files);
+                flkeys.forEach((file) => {
+                    console.log(files[file]);
+                    fd.append('intake file', file, file.name)
+                });
+                const xhr= new XMLHttpRequest();
+                xhr.onload = function () {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        // we done!
+                    }
+                };
+                xhr.open('POST', currurl, true);
+                xhr.send(fd);
+
+            }
+            else alert("Please choose files to upload")
+
+
+            // let resp= fetch('/upload');
+            // resp.then(r=>console.log(r))
+        });
     }
 
     //initial render

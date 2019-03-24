@@ -73,7 +73,7 @@ tr{
     /*margin: 0 5%*/
 }
 /* The actual popup (appears on top) */
-.upload .uploadtext {
+.uploadtext {
     visibility: hidden;
     width: 200px;
     height: 70px;
@@ -90,6 +90,14 @@ tr{
     /*margin-left: 180px;*/
 }
 
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s
+}
+
+
 /* Popup arrow */
 .upload .uploadtext::after {
     /*content: "";*/
@@ -102,9 +110,17 @@ tr{
     /*border-color: #555 transparent transparent transparent;*/
 }
 
-/* Toggle this class when clicking on the popup container (hide and show the popup) */
-.upload .show {
-    visibility: visible;
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s
+
+
+#clseupload{
+    position: absolute;
+    padding: 0px 3px;
+    left: 89%;
+    top: 5%;
+    /*right: 0;*/
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+}
+#clseupload:hover{
+    background-color: #c58394;
 }
