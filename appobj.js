@@ -4,28 +4,15 @@ $(function () {
     let files = $("#files")[0];
     let currurl='';
     // let upload = $("#upload")[0];
-    let uploadinput=$("#uploadinput")[0];
 
     let req = new XMLHttpRequest();
 
     function drawpopup() {
         let popup = document.getElementById("uploaddialog");
         popup.classList.add("show");
-        let uplbutt=$("#uploadbutt")[0];
 
-
-
-
-        uplbutt.addEventListener('click', function (e) {
-            //rest sending
-            console.log('event upl butt',e);
-            e.preventDefault();
-            console.log(uploadinput.files);
-
-            // let resp= fetch('/upload');
-            // resp.then(r=>console.log(r))
-        })
     }
+
     function hidepopup() {
         let popup = document.getElementById("uploaddialog");
         popup.classList.remove("show");
@@ -120,6 +107,15 @@ $(function () {
     }
 
     function render(filelist) {
+        //boilerplate cloning for cleaning upload elements from previous listeners
+        let uploadcont = $("#uploadcont")[0];
+        let uploadcontClone=uploadcont.cloneNode(true);
+        uploadcont.parentNode.replaceChild(uploadcontClone, uploadcont);
+        uploadcont = $("#uploadcont")[0];
+
+        let uploadinput=$("#uploadinput")[0];
+        let uplbutt=$("#uploadbutt")[0];
+        //cleaning filetable content
         files.innerHTML = '';
         // upload.addEventListener("click", async function (e){
         //     e.preventDefault();
@@ -127,6 +123,28 @@ $(function () {
         //     });
         uploadcont.addEventListener("click", function (e) {
             drawpopup()
+            //!implement popup closing (X button or click aside)
+        });
+
+        let evhandler = uplbutt.addEventListener('click', function (e) {
+            //rest sending
+            e.preventDefault();
+            const fd = new FormData();
+            let files=uploadinput.files;
+
+            if (files.length) {
+                let flkeys = Object.keys(uploadinput.files);
+                flkeys.forEach((file) => {
+                    console.log(files[file]);
+                    fd.append(file.name, file, file.name)
+                })
+
+            }
+            else alert("Please choose files to upload")
+
+
+            // let resp= fetch('/upload');
+            // resp.then(r=>console.log(r))
         });
 
         // function insertAfter(newNode, referenceNode) {
