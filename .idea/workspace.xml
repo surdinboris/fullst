@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="51a52083-a6cd-4a11-8331-e60c1aaaa50b" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/appobj.js" afterPath="$PROJECT_DIR$/appobj.js" />
-      <change beforePath="$PROJECT_DIR$/fileview.html" afterPath="$PROJECT_DIR$/fileview.html" />
-      <change beforePath="$PROJECT_DIR$/style/filevewstyle.css" afterPath="$PROJECT_DIR$/style/filevewstyle.css" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -25,11 +24,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fileview.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="fileview.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fileview.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="23" column="34" lean-forward="true" selection-start-line="23" selection-start-column="34" selection-end-line="23" selection-end-column="34" />
+            <state relative-caret-position="134">
+              <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -38,18 +37,18 @@
       <file leaf-file-name="appobj.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/appobj.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="178">
-              <caret line="17" column="10" lean-forward="false" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
+            <state relative-caret-position="112">
+              <caret line="106" column="39" lean-forward="false" selection-start-line="106" selection-start-column="29" selection-end-line="106" selection-end-column="39" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="filevewstyle.css" pinned="false" current-in-tab="true">
+      <file leaf-file-name="filevewstyle.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/style/filevewstyle.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="93" column="0" lean-forward="false" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+            <state relative-caret-position="30">
+              <caret line="85" column="23" lean-forward="true" selection-start-line="85" selection-start-column="23" selection-end-line="85" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -93,6 +92,8 @@
       <find>popup</find>
       <find>visibility</find>
       <find>classList</find>
+      <find>listen</find>
+      <find>sho</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -122,9 +123,9 @@
         <option value="$PROJECT_DIR$/style/fileview.css" />
         <option value="$PROJECT_DIR$/filevewstyle.css" />
         <option value="$PROJECT_DIR$/nodeservr.js" />
-        <option value="$PROJECT_DIR$/fileview.html" />
-        <option value="$PROJECT_DIR$/appobj.js" />
         <option value="$PROJECT_DIR$/style/filevewstyle.css" />
+        <option value="$PROJECT_DIR$/appobj.js" />
+        <option value="$PROJECT_DIR$/fileview.html" />
       </list>
     </option>
   </component>
@@ -141,8 +142,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="478" />
-    <option name="y" value="159" />
+    <option name="x" value="336" />
+    <option name="y" value="210" />
     <option name="width" value="1432" />
     <option name="height" value="850" />
   </component>
@@ -333,7 +334,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="209202000" />
+    <option name="totallyTimeSpent" value="210458000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -345,7 +346,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="478" y="159" width="1432" height="850" extended-state="0" />
+    <frame x="336" y="210" width="1432" height="850" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -656,26 +657,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fileview.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="23" column="34" lean-forward="true" selection-start-line="23" selection-start-column="34" selection-end-line="23" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/appobj.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="17" column="10" lean-forward="false" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
+        <state relative-caret-position="112">
+          <caret line="106" column="39" lean-forward="false" selection-start-line="106" selection-start-column="29" selection-end-line="106" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/style/filevewstyle.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="93" column="0" lean-forward="false" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+        <state relative-caret-position="30">
+          <caret line="85" column="23" lean-forward="true" selection-start-line="85" selection-start-column="23" selection-end-line="85" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fileview.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
           <folding />
         </state>
       </provider>

@@ -2,22 +2,18 @@ $(function () {
     'use strict';
     console.log('app init');
     let files = $("#files")[0];
+
     let currurl='/'+window.location.href.replace(/^(?:\/\/|[^\/]+)*\//, "");
     // let upload = $("#upload")[0];
 
     let req = new XMLHttpRequest();
 
     function drawpopup() {
-        let popup = document.getElementById("uploaddialog");
-        popup.classList.add("show");
-    }
-
-    function hidepopup() {
-        let popup = document.getElementById("uploaddialog");
-
-        //popup.classList.toggle("hiden");
+        let popup = $("#uploaddialog")[0];
+        popup.classList.toggle("show");
         console.log(popup)
     }
+
     //building file object prototype
     function DirRecord(entries,opts){
         if(opts.filtered == true) return;
@@ -115,16 +111,14 @@ $(function () {
         let uplbutt=$("#uploadbutt")[0];
         //cleaning filetable content
         files.innerHTML = '';
-        //boilerplate cloning for cleaning upload elements from previous listeners
-        uploadcont.parentNode.replaceChild(uploadcontClone, uploadcont);
-        uploadcont = $("#uploadcont")[0];
+
+            //boilerplate cloning for cleaning upload elements from previous listeners
+            uploadcont.parentNode.replaceChild(uploadcontClone, uploadcont);
+            uploadcont = $("#uploadcont")[0];
 
 
-        let clsupload = $("#clseupload")[0];
-        clsupload.addEventListener("click", function(e){
-            hidepopup();
 
-        });
+
         // upload.addEventListener("click", async function (e){
         //     e.preventDefault();
         //         alert("kaka")
@@ -149,7 +143,12 @@ $(function () {
         rowappend(dirrecs);
 
         uploadcont.addEventListener("click", function (e) {
-            drawpopup()
+
+            drawpopup();
+            let clsupload = $("#clseupload")[0];
+            clsupload.addEventListener("click", function(e){
+                drawpopup();
+            });
             //!implement popup closing (X button or click aside)
         });
 
