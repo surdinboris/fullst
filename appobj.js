@@ -10,10 +10,12 @@ $(function () {
 
     function drawpopup() {
         let popup = $("#uploaddialog")[0];
-        popup.classList.toggle("show");
-        console.log(popup)
+        popup.classList.add("show");
     }
-
+    function undrawpopup() {
+        let popup = $("#uploaddialog")[0];
+        popup.classList.remove("show");
+    }
     //building file object prototype
     function DirRecord(entries,opts){
         if(opts.filtered == true) return;
@@ -104,30 +106,14 @@ $(function () {
     }
 
     function render(filelist) {
+        let uploaddialbutt = $("#uploaddialbutt")[0];
         let uploadcont = $("#uploadcont")[0];
-        let uploadcontClone=uploadcont.cloneNode(true);
 
-        let uploadinput=$("#uploadinput")[0];
-        let uplbutt=$("#uploadbutt")[0];
+        let uploadcontClone=uploadcont.cloneNode(true);
         //cleaning filetable content
         files.innerHTML = '';
-
             //boilerplate cloning for cleaning upload elements from previous listeners
             uploadcont.parentNode.replaceChild(uploadcontClone, uploadcont);
-            uploadcont = $("#uploadcont")[0];
-
-
-
-
-        // upload.addEventListener("click", async function (e){
-        //     e.preventDefault();
-        //         alert("kaka")
-        //     });
-
-
-        // function insertAfter(newNode, referenceNode) {
-        //     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
-        // }
 
         function rowappend(dirrecs) {
             dirrecs.forEach(function (record, ind) {
@@ -142,19 +128,22 @@ $(function () {
         let dirrecs=objgen(filelist);
         rowappend(dirrecs);
 
-        uploadcont.addEventListener("click", function (e) {
-
-            drawpopup();
-            let clsupload = $("#clseupload")[0];
-            clsupload.addEventListener("click", function(e){
-                drawpopup();
-            });
-            //!implement popup closing (X button or click aside)
+        let clsupload = $("#clseupload")[0];
+        clsupload.addEventListener("click", function(e){
+            undrawpopup();
         });
 
+        uploaddialbutt.addEventListener("click", function (e) {
+            drawpopup();
+            //!implement popup closing (X button or click aside)
+
+        });
+        let uploadinput=$("#uploadinput")[0];
+        let uplbutt=$("#uploadbutt")[0];
         uplbutt.addEventListener('click', function (e) {
             //rest sending
             e.preventDefault();
+
             const fd = new FormData();
             let files=uploadinput.files;
 
