@@ -10,11 +10,7 @@ $(function () {
 
     function drawpopup() {
         let popup = $("#uploaddialog")[0];
-        popup.classList.add("show");
-    }
-    function undrawpopup() {
-        let popup = $("#uploaddialog")[0];
-        popup.classList.remove("show");
+        popup.classList.toggle("show");
     }
     //building file object prototype
     function DirRecord(entries,opts){
@@ -130,7 +126,7 @@ $(function () {
 
         let clsupload = $("#clseupload")[0];
         clsupload.addEventListener("click", function(e){
-            undrawpopup();
+            drawpopup();
         });
 
         uploaddialbutt.addEventListener("click", function (e) {
@@ -143,29 +139,27 @@ $(function () {
         uplbutt.addEventListener('click', function (e) {
             //rest sending
             e.preventDefault();
-
-            const fd = new FormData();
+            let fd = new FormData();
             let files=uploadinput.files;
-
             if (files.length) {
                 let flkeys = Object.keys(uploadinput.files);
                 flkeys.forEach((file) => {
                     console.log(files[file]);
-                    fd.append('intake file', file, file.name)
+                    fd.append('intake file', files[file], file.name)
                 });
-                const xhr= new XMLHttpRequest();
+                let xhr= new XMLHttpRequest();
                 xhr.onload = function () {
                     if (xhr.status >= 200 && xhr.status < 300) {
-                        // we done!
+                       alert(xhr.status)
                     }
                 };
-                xhr.open('POST', currurl, true);
+
+                xhr.open('PUT', currurl, true);
                 xhr.send(fd);
 
+                drawpopup();
             }
             else alert("Please choose files to upload")
-
-
             // let resp= fetch('/upload');
             // resp.then(r=>console.log(r))
         });

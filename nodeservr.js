@@ -1,4 +1,5 @@
 const {createReadStream} = require("fs");
+const {createWriteStream} = require("fs");
 const {stat, readdir,readFile} = require("fs").promises;
 const {parse} = require("url");
 const {join,resolve, sep, extname} = require("path");
@@ -6,6 +7,7 @@ const urljoin =require('url-join');
 const baseDirectory = process.cwd();
 const mime = require('mime');
 let http =require('http');
+let formidable = require("formidable");
 let handlers={};
 function isRestURL(requestUrl) {
     let idfilter = /\/restapi\//;
@@ -64,23 +66,35 @@ async function getfilelist(url){
     return filelistobj
 }
 
-handlers['POST']= async function (request,response) {
-console.log('POST', request.url)
+handlers['PUT']= async function (request,response) {
+    console.log('PUT',request.url, toFSpath(request.url))
+    //let wrstream= createWriteStream(join(toFSpath(request.url),'inpstream'));
+    // wrstream.on("error", function (error) {
+    //     response.end(500, error.toString())
+    // });
+    // wrstream.on("finish", function () {
+    //     response.end('204')
+    // });
+    //request.pipe(wrstream)
+    let form = new formidable.IncomingForm();
+    form.uploadDir=toFSpath(request.url);
+    form.on('fileBegin', function(name, file) {
+    console.log('fileBegin',name, file)
+    });
+    //console.log(form)
+    form.parse(request)
+    response.end(200)
 };
-
-
 
 handlers['GET']=async function (request,response) {
     console.log('get url', request.url);
     let url = request.url;
     if(isRestURL(request.url)){
-
         url = request.url.replace(/\/restapi\//, '/');
         console.log('new url', url)
     }
     else{
         console.log('notresturl')}
-
     let filepath = toFSpath(url);
     // console.log('toFSpath',request.url,toFSpath(request.url))
     let stats;
@@ -99,7 +113,7 @@ handlers['GET']=async function (request,response) {
         let filefront = await readFile('fileview.html');
         let filelistobj = await getfilelist(url);
         filelistobj = JSON.stringify(filelistobj);
-        console.log(filelistobj)
+        console.log(filelistobj);
         response.write(filefront);
         response.end(`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
     }
@@ -117,7 +131,7 @@ handlers['GET']=async function (request,response) {
 };
 
 let server=http.createServer(async function (request,response) {
-    console.log('new request retrieved', request);
+    console.log('new request retrieved', request.url, request.method);
     if (request.method in handlers){
         handlers[request.method](request,response)
     }
