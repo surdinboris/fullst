@@ -78,12 +78,15 @@ handlers['PUT']= async function (request,response) {
     //request.pipe(wrstream)
     let form = new formidable.IncomingForm();
     form.uploadDir=toFSpath(request.url);
+    form.keepExtensions = true;
     form.on('fileBegin', function(name, file) {
     console.log('fileBegin',name, file)
     });
+    // form.on('end',function () {
+    // response.end(200)
+    // });
     //console.log(form)
     form.parse(request)
-    response.end(200)
 };
 
 handlers['GET']=async function (request,response) {
