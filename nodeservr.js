@@ -1,6 +1,5 @@
-const {createReadStream} = require("fs");
-const {createWriteStream} = require("fs");
-const {stat, readdir,readFile} = require("fs").promises;
+const {createReadStream,createWriteStream} = require("fs");
+const {stat, readdir,readFile, rename} = require("fs").promises;
 const {parse} = require("url");
 const {join,resolve, sep, extname} = require("path");
 const urljoin =require('url-join');
@@ -17,7 +16,7 @@ function isRestURL(requestUrl) {
     else return false
 }
 
-function toFSpath(url) {
+function toFSpath(url){
     let {pathname} = parse(url);
     let filepath = resolve(decodeURIComponent(pathname).slice(1));
     if (filepath != baseDirectory &&
@@ -67,7 +66,7 @@ async function getfilelist(url){
 }
 
 handlers['PUT']= async function (request,response) {
-    console.log('PUT',request.url, toFSpath(request.url))
+    //console.log('PUT',request.url, toFSpath(request.url))
     //let wrstream= createWriteStream(join(toFSpath(request.url),'inpstream'));
     // wrstream.on("error", function (error) {
     //     response.end(500, error.toString())
@@ -79,18 +78,19 @@ handlers['PUT']= async function (request,response) {
     let form = new formidable.IncomingForm();
     form.uploadDir=toFSpath(request.url);
     form.keepExtensions = true;
-    form.on('fileBegin', function(name, file) {
-    console.log('fileBegin',name, file)
+    form.on('file', function(field, file) {
+        rename(file.path, form.uploadDir + "/" + file.name);
     });
-    // form.on('end',function () {
-    // response.end(200)
-    // });
+    form.on('end',function (param) {
+        console.log('>>>form.end',param)
+    response.end(200)
+    });
     //console.log(form)
     form.parse(request)
 };
 
 handlers['GET']=async function (request,response) {
-    console.log('get url', request.url);
+    //console.log('get url', request.url);
     let url = request.url;
     if(isRestURL(request.url)){
         url = request.url.replace(/\/restapi\//, '/');
@@ -130,17 +130,11 @@ handlers['GET']=async function (request,response) {
         response.setHeader("Content-Type", mimeType);
         response.end(await readFile(filepath))
     }
-
 };
-
 let server=http.createServer(async function (request,response) {
-    console.log('new request retrieved', request.url, request.method);
+    //console.log('new request retrieved', request.url, request.method);
     if (request.method in handlers){
         handlers[request.method](request,response)
     }
 });
-
-
-
-
 server.listen(3000);
