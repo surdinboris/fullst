@@ -45,6 +45,11 @@ tr{
     display: inline-block;
     cursor: pointer;
 }
+#gallery {
+    background-color: #666666;
+    border: black solid 1px;
+}
+
 #uploadform{
     position: relative;
     height: 100%;

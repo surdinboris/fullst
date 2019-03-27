@@ -26,6 +26,8 @@ function toFSpath(url){
     }
     return filepath;
 }
+
+//function that reads content of dir and returns object
 async function getfilelist(url){
     let filepath=toFSpath(url);
     let filelist = await readdir(filepath);
@@ -82,10 +84,9 @@ handlers['PUT']= async function (request,response) {
         rename(file.path, form.uploadDir + "/" + file.name);
     });
     form.on('end',function (param) {
-        console.log('>>>form.end',param)
+        console.log('>>>form.end',param);
     response.end(200)
     });
-    //console.log(form)
     form.parse(request)
 };
 
