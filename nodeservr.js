@@ -85,7 +85,7 @@ handlers['PUT']= async function (request,response) {
     });
     form.on('end',function (param) {
         console.log('>>>form.end',param);
-    response.end(200)
+    response.end('200')
     });
     form.parse(request)
 };

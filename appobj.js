@@ -10,6 +10,7 @@ $(function () {
 
     function drawpopup() {
         let popup = $("#uploaddialog")[0];
+        console.log(popup)
         popup.classList.toggle("show");
     }
     //building file object prototype
@@ -102,15 +103,16 @@ $(function () {
     }
 
     function render(filelist) {
-        let uploaddialbutt = $("#uploaddialbutt")[0];
         let uploadcont = $("#uploadcont")[0];
 
         let uploadcontClone=uploadcont.cloneNode(true);
+
+
         //cleaning filetable content
         files.innerHTML = '';
             //boilerplate cloning for cleaning upload elements from previous listeners
             uploadcont.parentNode.replaceChild(uploadcontClone, uploadcont);
-
+        let uploaddialbutt = $("#uploaddialbutt")[0];
         function rowappend(dirrecs) {
             dirrecs.forEach(function (record, ind) {
                 let htmlrec=record.gethtml();
@@ -123,16 +125,15 @@ $(function () {
         //rowgen(emptyrow);
         let dirrecs=objgen(filelist);
         rowappend(dirrecs);
-
         let clsupload = $("#clseupload")[0];
         clsupload.addEventListener("click", function(e){
             drawpopup();
         });
-
         uploaddialbutt.addEventListener("click", function (e) {
+            console.log('upl butt clicked');
             drawpopup();
-            //!implement popup closing (X button or click aside)
 
+            //!implement popup closing (X button or click aside)
         });
         let uploadinput=$("#uploadinput")[0];
         let uplbutt=$("#uploadbutt")[0];
@@ -148,16 +149,16 @@ $(function () {
                     fd.append('intake file', files[file], file.name)
                 });
                 let xhr= new XMLHttpRequest();
-                xhr.onload = function () {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                       alert(xhr.status)
-                    }
-                };
-
+                // xhr.onload = function ()
+                // {
+                //     if (xhr.status >= 200 && xhr.status < 300) {
+                //        alert(xhr.status)
+                //     }
+                // };
                 xhr.open('PUT', currurl, true);
                 xhr.send(fd);
-
-                drawpopup();
+                //drawpopup(e);
+                $(window).trigger('popstate',[currurl])
             }
             else alert("Please choose files to upload")
             // let resp= fetch('/upload');
@@ -166,27 +167,29 @@ $(function () {
     }
 
     //initial render
-    $(window).on('popstate', async function(e) {
+    $(window).on('popstate', async function(url) {
         // alert('Back button was pressed.');
-        let splitted = currurl.split(/(?=\/)/g);
-        let fdname=splitted[splitted.length-1].replace('/','');
-        let parenturl='';
-        splitted.pop();
-        if(splitted.length == 0){
-            parenturl = "/"
+        let parenturl = '';
+        if(!url) {
+            let fdname = splitted[splitted.length - 1].replace('/', '');
+
+            splitted.pop();
+            if (splitted.length == 0) {
+                parenturl = "/"
+            }
+            else {
+                parenturl = splitted.join("");
+            }
         }
         else{
-            parenturl = splitted.join("");
+            parenturl = url;
         }
         window.history.pushState("object or string", "Title", parenturl);
         let data = await getrestdata(parenturl);
-        console.log('>>>',parenturl, data);
+        // console.log('>>>',parenturl, data);
         currurl=parenturl;
         render(JSON.parse(data));
-
     });
-
-
     render(filelist)
 
 });
