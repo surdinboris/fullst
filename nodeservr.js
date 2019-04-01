@@ -12,15 +12,16 @@ let Router= function () {
 
     this.handlers=[]
 };
-Router.prototype.add = function (method, url, callback) {
-    let handler= {method:method, url:url, callback:callback};
-    handler.validateurl= function(url) {
-        console.log("url validation:",url.match(this.url));
-        return url.match(this.url)
-    };
-    this.handlers.push(handler);
+Router.prototype.add = function (method, urls, callback) {
+    for (let url of urls){
+        let handler= {method:method, url:url, callback:callback};
+        handler.validateurl= function(url) {
+            console.log("url validation:",url.match(this.url));
+            return url.match(this.url)};
+        this.handlers.push(handler);
+    }
+ };
 
-};
 
 Router.prototype.proc = function (request,response) {
     let method = request.method;
@@ -50,7 +51,7 @@ function isRestURL(requestUrl) {
 }
 
 
-router.add("GET",/style/, async function (request,response) {
+router.add("GET",[/style/,/js/,/node_modules/], async function (request,response) {
     let url = request.url;
     let filepath = toFSpath(url);
     let mimeType = await mime.getType(filepath);
@@ -59,14 +60,14 @@ router.add("GET",/style/, async function (request,response) {
 });
 
 
-router.add("GET",/\/restapi\//, async function (request,response) {
+router.add("GET",[/\/restapi\//], async function (request,response) {
     //console.log('get url', request.url);
     let url = request.url;
     url = request.url.replace(/\/restapi\//, '/');
     console.log('rest request', url)
 });
 
-router.add("GET",/files/, async function (request,response) {
+router.add("GET",[/files/], async function (request,response) {
     //console.log('get url', request.url);
     let url = request.url;
 
@@ -106,7 +107,7 @@ router.add("GET",/files/, async function (request,response) {
 });
 
 
-router.add("PUT",/.*/ ,async function (request,response) {
+router.add("PUT",[/.*/] ,async function (request,response) {
     //console.log('PUT',request.url, toFSpath(request.url))
     //let wrstream= createWriteStream(join(toFSpath(request.url),'inpstream'));
     // wrstream.on("error", function (error) {
