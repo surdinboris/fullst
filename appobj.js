@@ -155,10 +155,11 @@ $(function () {
                 //        alert(xhr.status)
                 //     }
                 // };
+                console.log("xhr", currurl)
                 xhr.open('PUT', currurl, true);
                 xhr.send(fd);
                 //drawpopup(e);
-                $(window).trigger('popstate',[currurl])
+                //$(window).trigger('popstate',[currurl])
             }
             else alert("Please choose files to upload")
             // let resp= fetch('/upload');
