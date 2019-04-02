@@ -62,9 +62,29 @@ router.add("GET",[/style/,/js/,/node_modules/], async function (request,response
 
 router.add("GET",[/\/restapi\//], async function (request,response) {
     //console.log('get url', request.url);
-    let url = request.url;
-    url = request.url.replace(/\/restapi\//, '/');
-    console.log('rest request', url)
+    //let url = request.url;
+
+    let url = request.url.replace(/\/restapi\//, '/');
+    console.log('rest request', url);
+
+    let filepath = toFSpath(url);
+    // console.log('toFSpath',request.url,toFSpath(request.url))
+    let stats;
+    let isdir;
+
+    try {
+        stats = await stat(filepath);
+        isdir = await stats.isDirectory()
+    }
+    catch (error){
+        console.log("satats error",error)
+    }
+
+    if (isdir && isRestURL(request.url)){
+        let filelistobj = await getfilelist(url);
+        filelistobj = JSON.stringify(filelistobj);
+        response.end(filelistobj)
+    }
 });
 
 router.add("GET",[/files/], async function (request,response) {
@@ -94,11 +114,7 @@ router.add("GET",[/files/], async function (request,response) {
         response.write(filefront);
         response.end(`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
     }
-    if (isdir && isRestURL(request.url)){
-        let filelistobj = await getfilelist(url);
-        filelistobj = JSON.stringify(filelistobj);
-        response.end(filelistobj)
-    }
+
     if (isdir == false){
         let mimeType = await mime.getType(filepath);
         response.setHeader("Content-Type", mimeType);
