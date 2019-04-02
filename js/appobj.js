@@ -158,7 +158,7 @@ $(function () {
                 console.log("xhr", currurl)
                 xhr.open('PUT', currurl, true);
                 xhr.send(fd);
-                //drawpopup(e);
+                drawpopup();
                 //$(window).trigger('popstate',[currurl])
             }
             else alert("Please choose files to upload")
