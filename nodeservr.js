@@ -8,6 +8,7 @@ const mime = require('mime');
 let http =require('http');
 let formidable = require("formidable");
 //constructing routing handler
+let Etag = 90;
 let Router= function () {
 
     this.handlers=[]
@@ -61,7 +62,7 @@ router.add("GET",[/style/,/js/,/node_modules/], async function (request,response
 
 
 function sendresponse(data, response, status, type) {
-    response.writeHead(status, {"Content-Type": type || "text/plain"})
+    response.writeHead(status, {"Content-Type": type || "text/plain", "Etag":Etag} )
     response.end(data)
 }
 

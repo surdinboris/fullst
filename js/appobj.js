@@ -2,11 +2,10 @@ $(function () {
     'use strict';
     console.log('app init');
     let files = $("#files")[0];
-
     let currurl='/'+window.location.href.replace(/^(?:\/\/|[^\/]+)*\//, "");
     // let upload = $("#upload")[0];
 
-    let req = new XMLHttpRequest();
+    //let req = new XMLHttpRequest();
 
     function drawpopup() {
         let popup = $("#uploaddialog")[0];
@@ -49,9 +48,19 @@ $(function () {
     }
 
     function getrestdata(url){
-        return fetch('/restapi'+url).then((resp) => {return resp.text()
-        })
 
+        return new Promise(function (res) {
+            let req = new XMLHttpRequest();
+            req.onreadystatechange=function(){
+                if (xhr.readyState === 4) {
+                    res(xhr.response);
+                }
+                req.addEventListener("load",);
+                req.open("GET",'/restapi'+url);
+        }
+        //return fetch('/restapi'+url).then((resp) => {return resp.text()
+
+    }).then((resp) => {return resp.text()})
     }
     //standard attributes interface definition for looping via data object
     DirRecord.prototype.gethtml= function(){
@@ -74,7 +83,7 @@ $(function () {
                             e.preventDefault();
                             let url = e.target.getAttribute('href');
                             let data = await getrestdata(url);
-                        window.history.pushState("object or string", "Title", url);
+                        window.history.pushState("object or string", "Title", url+"/");
                         currurl=url;
                             render(JSON.parse(data), url)
                     });
