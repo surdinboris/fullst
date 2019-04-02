@@ -33,7 +33,7 @@ Router.prototype.proc = function (request,response) {
         }
     }
 console.log('not handled');
-response.end("404")
+sendresponse("Not found 404", response, '404', "text/plain")
 };
 
 
@@ -108,7 +108,7 @@ router.add("GET",[/files/], async function (request,response) {
     } catch (error) {
         //console.log(error);
         if (error.code == "ENOENT"){
-            response.writeHead(404, `resource not found ${error}`);
+            sendresponse("Resource not found 404", response, '404', "text/plain")
             return
         }
     }
