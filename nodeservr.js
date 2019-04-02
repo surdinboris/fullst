@@ -60,13 +60,18 @@ router.add("GET",[/style/,/js/,/node_modules/], async function (request,response
 });
 
 
+function sendresponse(data, response, status, type) {
+    response.writeHead(status, {"Content-Type": type || "text/plain"})
+    response.end(data)
+}
+
+
+
 router.add("GET",[/\/restapi\//], async function (request,response) {
     //console.log('get url', request.url);
     //let url = request.url;
 
     let url = request.url.replace(/\/restapi\//, '/');
-    console.log('rest request', url);
-
     let filepath = toFSpath(url);
     // console.log('toFSpath',request.url,toFSpath(request.url))
     let stats;
@@ -82,8 +87,9 @@ router.add("GET",[/\/restapi\//], async function (request,response) {
 
     if (isdir && isRestURL(request.url)){
         let filelistobj = await getfilelist(url);
-        filelistobj = JSON.stringify(filelistobj);
-        response.end(filelistobj)
+        sendresponse(JSON.stringify(filelistobj), response, "200")
+        // filelistobj = JSON.stringify(filelistobj);
+        // response.end(filelistobj)
     }
 });
 
@@ -106,19 +112,21 @@ router.add("GET",[/files/], async function (request,response) {
             return
         }
     }
-    if (isdir && isRestURL(request.url) == false) {
+    if (isdir) {
         let filefront = await readFile('fileview.html');
         let filelistobj = await getfilelist(url);
         filelistobj = JSON.stringify(filelistobj);
-        console.log(filelistobj);
-        response.write(filefront);
-        response.end(`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
+        let respdata = filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`;
+        sendresponse(respdata,response, "200", "text/html")
+        // response.end(filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
     }
 
-    if (isdir == false){
+    if (!isdir){
         let mimeType = await mime.getType(filepath);
-        response.setHeader("Content-Type", mimeType);
-        response.end(await readFile(filepath))
+        //response.setHeader("Content-Type", mimeType);
+        let respdata= await readFile(filepath)
+        sendresponse(respdata ,response, 200, mimeType)
+        //response.end()
     }
 });
 
@@ -140,8 +148,8 @@ router.add("PUT",[/.*/] ,async function (request,response) {
         rename(file.path, form.uploadDir + "/" + file.name);
     });
     form.on('end',function (param) {
-        console.log('>>>form.end',param);
-        response.end('200')
+        // console.log('>>>form.end',param);
+        sendresponse('ok',response,"200")
     });
     form.parse(request)
 });
@@ -153,7 +161,7 @@ function toFSpath(url){
     if (filepath != baseDirectory &&
         !filepath.startsWith(baseDirectory + sep)){
         console.log('ahtung toFSpath restriction filepath',filepath);
-        throw {status: 403, body: "Forbidden"};
+        // throw {status: 403, body: "Forbidden"};
     }
     return filepath;
 }
