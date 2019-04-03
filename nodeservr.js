@@ -8,16 +8,35 @@ const mime = require('mime');
 let http =require('http');
 let formidable = require("formidable");
 //constructing routing handler
-let Etag = 90;
+let etag = 90;
 let Router= function () {
 
     this.handlers=[]
 };
+
+//polling
+//
+// function timeout(ms){
+//     return new Promise(function (resolve) {
+//         console.log('startpolling', ms)
+//         setTimeout(resolve(), ms)
+//     })
+//
+// }
+// async function startpolling(ms){
+//     while(true){
+//
+//     }
+//
+//     return getrestdata(currurl)
+// }
+
+
 Router.prototype.add = function (method, urls, callback) {
     for (let url of urls){
         let handler= {method:method, url:url, callback:callback};
         handler.validateurl= function(url) {
-            console.log("url validation:",url.match(this.url));
+            //console.log("url validation:",url.match(this.url));
             return url.match(this.url)};
         this.handlers.push(handler);
     }
@@ -61,10 +80,12 @@ router.add("GET",[/style/,/js/,/node_modules/], async function (request,response
 });
 
 
+
 function sendresponse(data, response, status, type) {
-    response.writeHead(status, {"Content-Type": type || "text/plain", "Etag":Etag} );
+    response.writeHead(status, {"Content-Type": type || "text/plain", "etag":etag} );
     response.end(data)
 }
+
 
 
 
@@ -93,7 +114,28 @@ router.add("GET",[/\/restapi\//], async function (request,response) {
         // response.end(filelistobj)
     }
 });
+router.add("GET", [/pollver/], async function (request,response) {
+    let waiting = [];
+    let since = request.headers['clversion'];
 
+    function waitforch(since,response) {
+        let waiter = {since:since, response:response};
+        waiting.push(waiter);
+        setTimeout(function () {
+            let found = waiting.indexOf(waiter);
+            if(found > -1){
+                waiting.splice(found,1);
+                sendresponse("not updated pollingresponse", response, '203', "text/plain")
+            }
+        }, 90*10);
+    }
+
+    waitforch(since,response)
+
+   //
+    //or
+    //sendresponse("updated pollingresponse", response, '203', "text/plain")
+});
 router.add("GET",[/files/], async function (request,response) {
     //console.log('get url', request.url);
     let url = request.url;

@@ -3,6 +3,7 @@ $(function () {
     console.log('app init');
     let files = $("#files")[0];
     let currurl='/'+window.location.href.replace(/^(?:\/\/|[^\/]+)*\//, "");
+    let curver = -1;
     // let upload = $("#upload")[0];
 
     //let req = new XMLHttpRequest();
@@ -47,23 +48,40 @@ $(function () {
         }
     }
 
-    function getrestdata(url){
 
+    //type = long - long polling support type = ondemand - onclick update
+    function getrestdata(url,type){
         return new Promise(function (res) {
+            let loadhandlers={};
+            loadhandlers['restapi'] = function () {
+                curver=this.getResponseHeader("etag");
+                res(this.responseText);
+            };
+            //to split things - pollver url just to verify client and server version.
+            //in case of client version is lower then server, startpolling procedure will
+            //be informed and render of current list will be initiated via standard flow
+            loadhandlers['pollver'] = function () {
+                curver=this.getResponseHeader("etag");
+                res(curver)
+            };
             let req = new XMLHttpRequest();
-                req.addEventListener("load", function () {
-                    console.log(this.getAllResponseHeaders()
-                    );
-                    res(this.responseText)
-                });
-            req.open("GET",'/restapi'+url);
-            req.send();
 
+            req.addEventListener("load", loadhandlers[type]);
+            req.open("GET",'/'+type+url);
+            req.setRequestHeader("clversion",curver);
+            req.send();
         });
 
         //return fetch('/restapi'+url).then((resp) => {return resp.text()
+    }
+
+    //detecting server version
+    async function startpolling(){
+        let srversion  = await getrestdata(currurl, "pollver");
+        alert('>>>'+srversion+':'+curver)
 
     }
+
     //standard attributes interface definition for looping via data object
     DirRecord.prototype.gethtml= function(){
         let container = document.createElement("tr");
@@ -84,7 +102,7 @@ $(function () {
                     anchor.addEventListener("click", async function (e) {
                             e.preventDefault();
                             let url = e.target.getAttribute('href');
-                            let data = await getrestdata(url);
+                            let data = await getrestdata(url,"restapi");
                         window.history.pushState("object or string", "Title", url+"/");
                         currurl=url;
                             render(JSON.parse(data), url)
@@ -176,6 +194,8 @@ $(function () {
             // let resp= fetch('/upload');
             // resp.then(r=>console.log(r))
         });
+        console.log("startpolling")
+        startpolling()
     }
 
     //initial render
@@ -197,9 +217,10 @@ $(function () {
             parenturl = url;
         }
         window.history.pushState("object or string", "Title", parenturl);
-        let data = await getrestdata(parenturl);
-        // console.log('>>>',parenturl, data);
+        let data = await getrestdata(parenturl, "restapi");
+        console.log('>>>',parenturl, data);
         currurl=parenturl;
+
         render(JSON.parse(data));
     });
     render(filelist)
