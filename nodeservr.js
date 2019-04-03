@@ -62,7 +62,7 @@ router.add("GET",[/style/,/js/,/node_modules/], async function (request,response
 
 
 function sendresponse(data, response, status, type) {
-    response.writeHead(status, {"Content-Type": type || "text/plain", "Etag":Etag} )
+    response.writeHead(status, {"Content-Type": type || "text/plain", "Etag":Etag} );
     response.end(data)
 }
 
@@ -125,7 +125,7 @@ router.add("GET",[/files/], async function (request,response) {
     if (!isdir){
         let mimeType = await mime.getType(filepath);
         //response.setHeader("Content-Type", mimeType);
-        let respdata= await readFile(filepath)
+        let respdata= await readFile(filepath);
         sendresponse(respdata ,response, 200, mimeType)
         //response.end()
     }

@@ -51,16 +51,18 @@ $(function () {
 
         return new Promise(function (res) {
             let req = new XMLHttpRequest();
-            req.onreadystatechange=function(){
-                if (xhr.readyState === 4) {
-                    res(xhr.response);
-                }
-                req.addEventListener("load",);
-                req.open("GET",'/restapi'+url);
-        }
+                req.addEventListener("load", function () {
+                    console.log(this.getAllResponseHeaders()
+                    );
+                    res(this.responseText)
+                });
+            req.open("GET",'/restapi'+url);
+            req.send();
+
+        });
+
         //return fetch('/restapi'+url).then((resp) => {return resp.text()
 
-    }).then((resp) => {return resp.text()})
     }
     //standard attributes interface definition for looping via data object
     DirRecord.prototype.gethtml= function(){
@@ -158,12 +160,12 @@ $(function () {
                     fd.append('intake file', files[file], file.name)
                 });
                 let xhr= new XMLHttpRequest();
-                // xhr.onload = function ()
-                // {
-                //     if (xhr.status >= 200 && xhr.status < 300) {
-                //        alert(xhr.status)
-                //     }
-                // };
+                xhr.onload = function ()
+                {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                       alert(xhr.status)
+                    }
+                };
                 console.log("xhr", currurl)
                 xhr.open('PUT', currurl, true);
                 xhr.send(fd);
