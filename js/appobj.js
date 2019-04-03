@@ -78,8 +78,8 @@ $(function () {
     //detecting server version
     async function startpolling(){
         let srversion  = await getrestdata(currurl, "pollver");
-        alert('>>>'+srversion+':'+curver)
-
+        alert('>>>'+srversion+':'+curver);
+        startpolling()
     }
 
     //standard attributes interface definition for looping via data object

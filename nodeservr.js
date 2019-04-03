@@ -114,20 +114,22 @@ router.add("GET",[/\/restapi\//], async function (request,response) {
         // response.end(filelistobj)
     }
 });
-router.add("GET", [/pollver/], async function (request,response) {
-    let waiting = [];
-    let since = request.headers['clversion'];
+let waiting = [];
+router.add("GET", [/pollver/],  function (request,response) {
 
+    let since = request.headers['clversion'];
     function waitforch(since,response) {
         let waiter = {since:since, response:response};
         waiting.push(waiter);
+        console.log(waiting.length);
         setTimeout(function () {
             let found = waiting.indexOf(waiter);
             if(found > -1){
                 waiting.splice(found,1);
+                console.log(waiting.length);
                 sendresponse("not updated pollingresponse", response, '203', "text/plain")
             }
-        }, 90*10);
+        }, 90*100);
     }
 
     waitforch(since,response)
