@@ -52,7 +52,7 @@ Router.prototype.proc = function (request,response) {
             return
         }
     }
-console.log('not handled');
+console.log('not handled',request.url, request.method);
 sendresponse("Not found 404", response, '404', "text/plain")
 };
 
@@ -80,8 +80,8 @@ router.add("GET",[/style/,/js/,/node_modules/], async function (request,response
 });
 
 
-
 function sendresponse(data, response, status, type) {
+    console.log({"Content-Type": type || "text/plain", "etag":etag});
     response.writeHead(status, {"Content-Type": type || "text/plain", "etag":etag} );
     response.end(data)
 }
@@ -92,13 +92,11 @@ function sendresponse(data, response, status, type) {
 router.add("GET",[/\/restapi\//], async function (request,response) {
     //console.log('get url', request.url);
     //let url = request.url;
-
     let url = request.url.replace(/\/restapi\//, '/');
     let filepath = toFSpath(url);
     // console.log('toFSpath',request.url,toFSpath(request.url))
     let stats;
     let isdir;
-
     try {
         stats = await stat(filepath);
         isdir = await stats.isDirectory()
@@ -106,7 +104,6 @@ router.add("GET",[/\/restapi\//], async function (request,response) {
     catch (error){
         console.log("satats error",error)
     }
-
     if (isdir && isRestURL(request.url)){
         let filelistobj = await getfilelist(url);
         sendresponse(JSON.stringify(filelistobj), response, "200")
@@ -114,28 +111,41 @@ router.add("GET",[/\/restapi\//], async function (request,response) {
         // response.end(filelistobj)
     }
 });
-let waiting = [];
-router.add("GET", [/pollver/],  function (request,response) {
 
-    let since = request.headers['clversion'];
-    function waitforch(since,response) {
-        let waiter = {since:since, response:response};
+let waiting = [];
+
+function folderchanged(){
+    // podssible improvement is to add request.headers['folerpath']
+    //  register changes in specific folder and accordingly resolve requests only for
+    // client looking into that folder
+    etag=etag+1;
+    waiting.forEach(function (waiter) {
+        console.log('+++sending responses on folderchange');
+
+      sendresponse("updated pollingresponse", waiter["response"], '201', "text/plain")
+   });
+    waiting = [];
+}
+
+
+router.add("GET", [/pollver/],  function (request,response) {
+    let clversion = request.headers['clversion'];
+
+    function waitforch(clversion,response) {
+        let waiter = {clversion:clversion, response:response};
         waiting.push(waiter);
         console.log(waiting.length);
         setTimeout(function () {
             let found = waiting.indexOf(waiter);
             if(found > -1){
                 waiting.splice(found,1);
-                console.log(waiting.length);
                 sendresponse("not updated pollingresponse", response, '203', "text/plain")
             }
         }, 90*100);
     }
+    waitforch(clversion,response)
 
-    waitforch(since,response)
-
-   //
-    //or
+   ////or
     //sendresponse("updated pollingresponse", response, '203', "text/plain")
 });
 router.add("GET",[/files/], async function (request,response) {
@@ -191,12 +201,18 @@ router.add("PUT",[/.*/] ,async function (request,response) {
     form.keepExtensions = true;
     form.on('file', function(field, file) {
         rename(file.path, form.uploadDir + "/" + file.name);
+        //upadating etag and initiating clients updates via folderchanged
+
     });
-    form.on('end',function (param) {
-        // console.log('>>>form.end',param);
-        sendresponse('ok',response,"200")
+    form.on('end',function () {
+        console.log('>>>form.end');
+        sendresponse('ok',response,"200");
+        folderchanged();
+
     });
-    form.parse(request)
+    form.parse(request);
+
+
 });
 
 

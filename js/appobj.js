@@ -1,6 +1,7 @@
 $(function () {
     'use strict';
     console.log('app init');
+    let initrender = false;
     let files = $("#files")[0];
     let currurl='/'+window.location.href.replace(/^(?:\/\/|[^\/]+)*\//, "");
     let curver = -1;
@@ -49,7 +50,7 @@ $(function () {
     }
 
 
-    //type = long - long polling support type = ondemand - onclick update
+    //type = pollver - long polling support type = restapi - onclick update
     function getrestdata(url,type){
         return new Promise(function (res) {
             let loadhandlers={};
@@ -61,8 +62,8 @@ $(function () {
             //in case of client version is lower then server, startpolling procedure will
             //be informed and render of current list will be initiated via standard flow
             loadhandlers['pollver'] = function () {
-                curver=this.getResponseHeader("etag");
-                res(curver)
+                let srversion=this.getResponseHeader("etag");
+                res(srversion)
             };
             let req = new XMLHttpRequest();
 
@@ -77,9 +78,27 @@ $(function () {
 
     //detecting server version
     async function startpolling(){
-        let srversion  = await getrestdata(currurl, "pollver");
-        alert('>>>'+srversion+':'+curver);
-        startpolling()
+        while (true) {
+            console.log("startpolling");
+            let srversion  = await getrestdata(currurl, "pollver");
+            //alert(srversion+''+curver);
+
+            if(srversion == curver){
+
+                console.log("srversion == curver",srversion,curver );
+
+            }
+            else{
+                console.log("srversion != curver",srversion,curver );
+                console.log('rerendering');
+                let data = await getrestdata(currurl, "restapi");
+                render(JSON.parse(data))
+                curver=srversion;
+            }
+
+            //    startpolling()
+        }
+
     }
 
     //standard attributes interface definition for looping via data object
@@ -132,6 +151,7 @@ $(function () {
     }
 
     function render(filelist) {
+
         let uploadcont = $("#uploadcont")[0];
 
         let uploadcontClone=uploadcont.cloneNode(true);
@@ -180,11 +200,11 @@ $(function () {
                 let xhr= new XMLHttpRequest();
                 xhr.onload = function ()
                 {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                       alert(xhr.status)
-                    }
+                    //if (xhr.status >= 200 && xhr.status < 300) {
+                       //alert(xhr.status)
+                    //}
                 };
-                console.log("xhr", currurl)
+                console.log("xhr", currurl);
                 xhr.open('PUT', currurl, true);
                 xhr.send(fd);
                 drawpopup();
@@ -194,8 +214,9 @@ $(function () {
             // let resp= fetch('/upload');
             // resp.then(r=>console.log(r))
         });
-        console.log("startpolling")
-        startpolling()
+        if (!initrender){
+            startpolling()}
+
     }
 
     //initial render
@@ -224,5 +245,6 @@ $(function () {
         render(JSON.parse(data));
     });
     render(filelist)
+    initrender=true;
 
 });
