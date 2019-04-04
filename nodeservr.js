@@ -138,7 +138,7 @@ router.add("GET", [/pollver/],  function (request,response) {
         setTimeout(function () {
             let found = waiting.indexOf(waiter);
             if(found > -1){
-                waiting.splice(found,1);
+                //waiting.splice(found,1);
                 sendresponse("not updated pollingresponse", response, '203', "text/plain")
             }
         }, 90*100);
