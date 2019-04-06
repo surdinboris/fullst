@@ -89,9 +89,9 @@ $(function () {
             }
             else{
                 console.log("srversion != curver",srversion,curver );
-                console.log('rerendering');
-                let data = await getrestdata(currurl, "restapi");
-                render(JSON.parse(data))
+                console.log('rerendering', currurl);
+                getrestdata(currurl, "restapi").then(restd=> render(JSON.parse(restd)));
+
                 curver=srversion;
             }
 
@@ -206,7 +206,7 @@ $(function () {
                 console.log("xhr", currurl);
                 xhr.open('PUT', currurl, true);
                 xhr.send(fd);
-                startpolling()
+                startpolling();
                 drawpopup();
                 //$(window).trigger('popstate',[currurl])
             }

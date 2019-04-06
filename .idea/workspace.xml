@@ -10,20 +10,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nodeservr.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="132" column="11" selection-start-line="132" selection-start-column="6" selection-end-line="132" selection-end-column="11" />
+            <state relative-caret-position="184">
+              <caret line="303" column="13" lean-forward="true" selection-start-line="303" selection-start-column="13" selection-end-line="303" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/appobj.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="116">
-              <caret line="27" column="39" selection-start-line="27" selection-start-column="39" selection-end-line="27" selection-end-column="39" />
+            <state relative-caret-position="2506">
+              <caret line="248" lean-forward="true" selection-start-line="248" selection-end-line="248" />
             </state>
           </provider>
         </entry>
@@ -64,9 +64,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>data</find>
-      <find>alert</find>
-      <find>clone</find>
       <find>validati</find>
       <find>filepath</find>
       <find>uploaddialbutt</find>
@@ -87,13 +84,16 @@
       <find>start</find>
       <find>XMLHttpRequest</find>
       <find>wa</find>
-      <find>startpoll</find>
       <find>versio</find>
       <find>leng</find>
       <find>waiting.len</find>
       <find>handlers</find>
       <find>addin</find>
       <find>calling</find>
+      <find>calc</find>
+      <find>startpoll</find>
+      <find>put</find>
+      <find>waiti</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -164,6 +164,12 @@
               <item name="fullst" type="462c0819:PsiDirectoryNode" />
               <item name="files" type="462c0819:PsiDirectoryNode" />
               <item name="foldr1" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fullst" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fullst" type="462c0819:PsiDirectoryNode" />
+              <item name="files" type="462c0819:PsiDirectoryNode" />
+              <item name="foldr2" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="fullst" type="b2602c69:ProjectViewProjectNode" />
@@ -276,7 +282,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="fullst JavaScript" type="JavascriptDebugType" engineId="98ca6316-2f89-46d9-a9e5-fa9e2b0625b3" uri="http://localhost:3000">
+    <configuration name="fullst JavaScript" type="JavascriptDebugType" engineId="98ca6316-2f89-46d9-a9e5-fa9e2b0625b3" uri="http://localhost:3000/">
       <method v="2" />
     </configuration>
     <configuration name="fullst" type="NodeJSConfigurationType" path-to-js-file="nodeservr.js" working-dir="$PROJECT_DIR$">
@@ -323,7 +329,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="325195000" />
+    <option name="totallyTimeSpent" value="332591000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -338,7 +344,7 @@
     <frame x="1" y="23" width="1440" height="877" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17668097" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17668097" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="3" />
@@ -347,7 +353,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.4941435" weight="0.30577427" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.488544" visible="true" weight="0.4238845" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.488544" visible="true" weight="0.36614174" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.8226164" weight="0.39632547" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -486,17 +492,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/appobj.js">
+    <entry file="file://$PROJECT_DIR$/nodeservr.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="27" column="39" selection-start-line="27" selection-start-column="39" selection-end-line="27" selection-end-column="39" />
+        <state relative-caret-position="184">
+          <caret line="303" column="13" lean-forward="true" selection-start-line="303" selection-start-column="13" selection-end-line="303" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nodeservr.js">
+    <entry file="file://$PROJECT_DIR$/js/appobj.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="132" column="11" selection-start-line="132" selection-start-column="6" selection-end-line="132" selection-end-column="11" />
+        <state relative-caret-position="2506">
+          <caret line="248" lean-forward="true" selection-start-line="248" selection-end-line="248" />
         </state>
       </provider>
     </entry>

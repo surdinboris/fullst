@@ -37,25 +37,29 @@ Router.prototype.add = function (method, urls, callback) {
     for (let url of urls){
         let handler= {method:method, url:url, callback:callback};
         handler.validateurl= function(url) {
+            console.log('validateurl', url, this.url,url.match(this.url))
             return url.match(this.url)};
+
         this.handlers.push(handler);
     }
  };
 
 
-Router.prototype.proc = function (request,response) {
+Router.prototype.proc = async function (request,response) {
+    console.log("procstarted<<<<<<");
     let method = request.method;
     let url = request.url;
     for(let handler of this.handlers) {
-        console.log('executing proc handler...', handler);
         if (handler.method == method && handler.validateurl(url)!= null){
             console.log('calling handler callback', handler.method,handler.url)
-            handler.callback(request,response);
+            await handler.callback(request,response);
+            console.log('proc ended>>>>>');
             return
         }
     }
 console.log('not handled',request.url, request.method);
 sendresponse("Not found 404", response, '404', "text/plain")
+    console.log('proc ended>>>>>')
 };
 
 
@@ -73,12 +77,19 @@ function isRestURL(requestUrl) {
 }
 
 
-router.add("GET",[/style/,/js/,/node_modules/], async function (request,response) {
+router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
+    console.log('js handler started')
     let url = request.url;
     let filepath = toFSpath(url);
-    let mimeType = await mime.getType(filepath);
-    response.setHeader("Content-Type", mimeType);
-    response.end(await readFile(filepath))
+    let mimeType =  mime.getType(filepath);
+
+
+
+     response.setHeader("Content-Type", mimeType);
+        readFile(filepath).then(rfile=>{response.end(rfile);
+        console.log('js handler ended')})
+    //response.setHeader("Content-Type", mimeType);
+
 });
 
 
@@ -110,9 +121,10 @@ router.add("GET",[/\/restapi\//], async function (request,response) {
     }
     if (isdir){
         console.log('calc  filelist')
-        let filelistobj = await getfilelist(url);
-        console.log(filelistobj)
-        sendresponse(JSON.stringify(filelistobj), response, "200")
+        getfilelist(url).then(filelistobj=>sendresponse(JSON.stringify(filelistobj), response, "200"));
+       // let filelistobj =  getfilelist(url);
+        console.log('calced filelist sent')
+
         // filelistobj = JSON.stringify(filelistobj);
         // response.end(filelistobj)
     }
@@ -121,20 +133,20 @@ router.add("GET",[/\/restapi\//], async function (request,response) {
 
 
 function folderchanged(){
-    console.log(waiting.length)
+    console.log('waiting before folderchange',waiting.length)
     // podssible improvement is to add request.headers['folerpath']
     //  register changes in specific folder and accordingly resolve requests only for
     // client looking into that folder
     etag=etag+1;
-
-    waiting.forEach(async function (waiter) {
+    for (let waiter of waiting){
+   // waiting.forEach( function (waiter) {
         console.log('+++sending responses on folderchange',etag,waiter.clversion);
 
-      await sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain")
+       sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain")
 
-    });
+    };
     waiting = [];
-    console.log(waiting.length)
+    console.log('waiting-length',waiting.length)
 
 }
 
@@ -154,7 +166,7 @@ router.add("GET", [/pollver/],  function (request,response) {
                 console.log('>>>','one was removed by timeout',waiting.length )
 
 
-                sendresponse("not updated pollingresponse", waiting[found].response, '203', "text/plain")
+                sendresponse("not updated pollingresponse", response, '203', "text/plain")
                 waiting.splice(found,1);
             }
         }, 90*1000);
@@ -214,18 +226,21 @@ router.add("PUT",[/.*/] ,async function (request,response) {
     let form = new formidable.IncomingForm();
     form.uploadDir=toFSpath(request.url);
     form.keepExtensions = true;
-    form.on('file', function(field, file) {
-        rename(file.path, form.uploadDir + "/" + file.name);
+    form.on('file',async  function(field, file) {
+        await rename(file.path, form.uploadDir + "/" + file.name);
         //upadating etag and initiating clients updates via folderchanged
 
     });
-    form.on('end',function () {
+    form.on('end',async function () {
         console.log('>>>form.end');
         sendresponse('ok',response,"200");
+
         folderchanged();
+
 
     });
     form.parse(request);
+
 
 
 });
@@ -286,7 +301,9 @@ async function getfilelist(url){
 
 let server=http.createServer(async function (request,response) {
    console.log('new request retrieved', request.url, request.method);
-router.proc(request,response)
+    router.proc(request,response)
+    console.log('waiting after proc',waiting.length)
+
 
 });
 server.listen(3000);
