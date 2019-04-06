@@ -9,6 +9,7 @@ let http =require('http');
 let formidable = require("formidable");
 //constructing routing handler
 let etag = 90;
+let waiting = [];
 let Router= function () {
 
     this.handlers=[]
@@ -36,7 +37,6 @@ Router.prototype.add = function (method, urls, callback) {
     for (let url of urls){
         let handler= {method:method, url:url, callback:callback};
         handler.validateurl= function(url) {
-            //console.log("url validation:",url.match(this.url));
             return url.match(this.url)};
         this.handlers.push(handler);
     }
@@ -47,7 +47,9 @@ Router.prototype.proc = function (request,response) {
     let method = request.method;
     let url = request.url;
     for(let handler of this.handlers) {
-        if (handler.method == method && handler.validateurl(url)){
+        console.log('executing proc handler...', handler);
+        if (handler.method == method && handler.validateurl(url)!= null){
+            console.log('calling handler callback', handler.method,handler.url)
             handler.callback(request,response);
             return
         }
@@ -81,7 +83,7 @@ router.add("GET",[/style/,/js/,/node_modules/], async function (request,response
 
 
 function sendresponse(data, response, status, type) {
-    console.log({"Content-Type": type || "text/plain", "etag":etag});
+    //console.log({"Content-Type": type || "text/plain", "etag":etag});
     response.writeHead(status, {"Content-Type": type || "text/plain", "etag":etag} );
     response.end(data)
 }
@@ -98,52 +100,65 @@ router.add("GET",[/\/restapi\//], async function (request,response) {
     let stats;
     let isdir;
     try {
+        console.log('calculating stats')
         stats = await stat(filepath);
         isdir = await stats.isDirectory()
+        console.log('is dir', isdir)
     }
     catch (error){
         console.log("satats error",error)
     }
-    if (isdir && isRestURL(request.url)){
+    if (isdir){
+        console.log('calc  filelist')
         let filelistobj = await getfilelist(url);
+        console.log(filelistobj)
         sendresponse(JSON.stringify(filelistobj), response, "200")
         // filelistobj = JSON.stringify(filelistobj);
         // response.end(filelistobj)
     }
 });
 
-let waiting = [];
+
 
 function folderchanged(){
+    console.log(waiting.length)
     // podssible improvement is to add request.headers['folerpath']
     //  register changes in specific folder and accordingly resolve requests only for
     // client looking into that folder
     etag=etag+1;
-    waiting.forEach(function (waiter) {
-        console.log('+++sending responses on folderchange');
 
-      sendresponse("updated pollingresponse", waiter["response"], '201', "text/plain")
-   });
+    waiting.forEach(async function (waiter) {
+        console.log('+++sending responses on folderchange',etag,waiter.clversion);
+
+      await sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain")
+
+    });
     waiting = [];
+    console.log(waiting.length)
+
 }
 
 
 router.add("GET", [/pollver/],  function (request,response) {
+    console.log('pollver request recieved')
     let clversion = request.headers['clversion'];
 
-    function waitforch(clversion,response) {
         let waiter = {clversion:clversion, response:response};
         waiting.push(waiter);
-        console.log(waiting.length);
+        console.log('waiter adding to pool', waiting.length)
+        //console.log(waiting.length);
+
         setTimeout(function () {
             let found = waiting.indexOf(waiter);
             if(found > -1){
-                //waiting.splice(found,1);
-                sendresponse("not updated pollingresponse", response, '203', "text/plain")
+                console.log('>>>','one was removed by timeout',waiting.length )
+
+
+                sendresponse("not updated pollingresponse", waiting[found].response, '203', "text/plain")
+                waiting.splice(found,1);
             }
-        }, 90*100);
-    }
-    waitforch(clversion,response)
+        }, 90*1000);
+
 
    ////or
     //sendresponse("updated pollingresponse", response, '203', "text/plain")
@@ -270,7 +285,7 @@ async function getfilelist(url){
 
 
 let server=http.createServer(async function (request,response) {
-    //console.log('new request retrieved', request.url, request.method);
+   console.log('new request retrieved', request.url, request.method);
 router.proc(request,response)
 
 });

@@ -78,15 +78,14 @@ $(function () {
 
     //detecting server version
     async function startpolling(){
+        let pollcycle=0
         while (true) {
-            console.log("startpolling");
+            pollcycle=pollcycle+1;
+            console.log("startpolling pollcycle", pollcycle);
             let srversion  = await getrestdata(currurl, "pollver");
             //alert(srversion+''+curver);
-
             if(srversion == curver){
-
                 console.log("srversion == curver",srversion,curver );
-
             }
             else{
                 console.log("srversion != curver",srversion,curver );
@@ -96,7 +95,7 @@ $(function () {
                 curver=srversion;
             }
 
-            //    startpolling()
+                //startpolling()
         }
 
     }
@@ -207,6 +206,7 @@ $(function () {
                 console.log("xhr", currurl);
                 xhr.open('PUT', currurl, true);
                 xhr.send(fd);
+                startpolling()
                 drawpopup();
                 //$(window).trigger('popstate',[currurl])
             }
@@ -214,8 +214,8 @@ $(function () {
             // let resp= fetch('/upload');
             // resp.then(r=>console.log(r))
         });
-        if (!initrender){
-            startpolling()}
+        //if (!initrender){
+          //  startpolling()}
 
     }
 
@@ -244,7 +244,7 @@ $(function () {
 
         render(JSON.parse(data));
     });
-    render(filelist)
-    initrender=true;
+    render(filelist);
+    startpolling()
 
 });
