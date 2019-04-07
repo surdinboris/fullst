@@ -82,7 +82,7 @@ $(function () {
         while (true) {
             pollcycle=pollcycle+1;
             console.log("startpolling pollcycle", pollcycle);
-            let srversion  = await getrestdata(currurl, "pollver");
+            let srversion  =await  getrestdata(currurl, "pollver");
             //alert(srversion+''+curver);
             if(srversion == curver){
                 console.log("srversion == curver",srversion,curver );
