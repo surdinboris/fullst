@@ -28,16 +28,44 @@ Router.prototype.add = function (method, urls, callback) {
 
 
 Router.prototype.proc = async function (request,response) {
+
     let method = request.method;
     let url = request.url;
     for(let handler of this.handlers) {
-        if (handler.method == method && handler.validateurl(url)!= null){
-            handler.callback(request,response).then(res => console.log('rezzz',res));
+        if (handler.method == method && handler.validateurl(url) != null) {
+            await handler.callback(request, response)
+            break
+        }
+        else {
+
+            console.log('not handled', request.url, request.method);
+            sendresponse("Not found 404", response, '404', "text/plain")
             return
         }
+}
+
+    if(request.method == "PUT"){
+        console.log('waiting before folderchange', waiting.length)
+        // podssible improvement is to add request.headers['folerpath']
+        //  register changes in specific folder and accordingly resolve requests only for
+        // client looking into that folder
+        etag = etag + 1;
+        for (let waiter of waiting) {
+            // waiting.forEach( function (waiter) {
+            console.log('+++sending responses on folderchange', etag, waiter.clversion);
+            sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain")
+        }
+        ;
+        console.log('clearing waiting ', waiting.length, 'entries');
+        waiting = [];
+        console.log('waiting-length', waiting.length)
     }
-console.log('not handled',request.url, request.method);
-    sendresponse("Not found 404", response, '404', "text/plain")
+    if(request.method == "PUT"){
+        console.log('---------waiting after PUT proc', waiting.length)}
+    console.log('*****request execution completed******', request.method,request.url)
+
+
+
 };
 
 
@@ -250,27 +278,7 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
         console.log('*****request execution started******', request.method,request.url)
         console.log('---------waiting before proc', waiting.length)
         console.log('new request retrieved', request.url, request.method);
-        router.proc(request, response).then(res=>console.log('ress', res))
-
-        if(request.method == "PUT"){
-            console.log('waiting before folderchange', waiting.length)
-            // podssible improvement is to add request.headers['folerpath']
-            //  register changes in specific folder and accordingly resolve requests only for
-            // client looking into that folder
-            etag = etag + 1;
-            for (let waiter of waiting) {
-                // waiting.forEach( function (waiter) {
-                console.log('+++sending responses on folderchange', etag, waiter.clversion);
-                sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain")
-            }
-            ;
-            console.log('clearing waiting ', waiting.length, 'entries');
-            waiting = [];
-            console.log('waiting-length', waiting.length)
-        }
-        if(request.method == "PUT"){
-        console.log('---------waiting after PUT proc', waiting.length)}
-        console.log('*****request execution completed******', request.method,request.url)
+        router.proc(request, response)
 
     });
     server.listen(3000)
