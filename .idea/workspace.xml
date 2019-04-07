@@ -2,6 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="51a52083-a6cd-4a11-8331-e60c1aaaa50b" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/files/foldr2/Eaton_5PX_LVHV11_E0_V14.00.0000_TL00.sta.zip" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/files/foldr2/eatonusbverify.jpg" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/files/foldr2/iba.jpeg" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/files/foldr2/libusb-win32-bin-1.2.6.0.zip" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/files/foldr2/smb.jpeg" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/js/appobj.js" afterPath="$PROJECT_DIR$/js/appobj.js" />
       <change beforePath="$PROJECT_DIR$/nodeservr.js" afterPath="$PROJECT_DIR$/nodeservr.js" />
     </list>
@@ -29,8 +35,8 @@
       <file leaf-file-name="nodeservr.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nodeservr.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
-              <caret line="34" column="46" lean-forward="false" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
+            <state relative-caret-position="-4469">
+              <caret line="40" column="2" lean-forward="true" selection-start-line="40" selection-start-column="2" selection-end-line="40" selection-end-column="2" />
               <folding />
             </state>
           </provider>
@@ -371,7 +377,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="343566000" />
+    <option name="totallyTimeSpent" value="343717000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -668,8 +674,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nodeservr.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="34" column="46" lean-forward="false" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
+        <state relative-caret-position="-4469">
+          <caret line="40" column="2" lean-forward="true" selection-start-line="40" selection-start-column="2" selection-end-line="40" selection-end-column="2" />
           <folding />
         </state>
       </provider>
