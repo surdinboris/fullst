@@ -28,44 +28,43 @@ Router.prototype.add = function (method, urls, callback) {
 
 
 Router.prototype.proc = async function (request,response) {
-
     let method = request.method;
     let url = request.url;
+    let handlerfound=false;
     for(let handler of this.handlers) {
         if (handler.method == method && handler.validateurl(url) != null) {
-            await handler.callback(request, response)
+            let handlerresult = await handler.callback(request, response);
+            console.log("/////////",handlerresult)
+            handlerfound = true;
             break
         }
-        else {
+    }
 
-            console.log('not handled', request.url, request.method);
-            sendresponse("Not found 404", response, '404', "text/plain")
-            return
-        }
-}
+    if (!handlerfound){ console.log('not handled', request.url, request.method);
+        sendresponse("Not found 404", response, '404', "text/plain");
+        return
+    }
 
     if(request.method == "PUT"){
-        console.log('waiting before folderchange', waiting.length)
+        console.log('waiting before folderchange', waiting.length);
         // podssible improvement is to add request.headers['folerpath']
         //  register changes in specific folder and accordingly resolve requests only for
         // client looking into that folder
         etag = etag + 1;
+        console.log('|||| waiting inside put observers calling', waiting.length);
         for (let waiter of waiting) {
             // waiting.forEach( function (waiter) {
-            console.log('+++sending responses on folderchange', etag, waiter.clversion);
-            sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain")
+            console.log('+++sending responses on folderchange', etag);
+            await sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain");
+            console.log('|||| waiting after put observers calling', waiting.length)
         }
-        ;
         console.log('clearing waiting ', waiting.length, 'entries');
         waiting = [];
-        console.log('waiting-length', waiting.length)
+        console.log('waiting-length', waiting.length);
+        console.log('---------waiting after PUT proc', waiting.length);
     }
-    if(request.method == "PUT"){
-        console.log('---------waiting after PUT proc', waiting.length)}
-    console.log('*****request execution completed******', request.method,request.url)
 
-
-
+        console.log('*****request execution completed******', request.method,request.url)
 };
 
 
@@ -98,47 +97,52 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
     });
 });
 
-    function sendresponse(data, response, status, type) {
+    async function sendresponse(data, response, status, type) {
         //console.log({"Content-Type": type || "text/plain", "etag":etag});
         response.writeHead(status, {"Content-Type": type || "text/plain", "etag": etag});
-        response.end(data)
+        await response.end(data)
     }
 
 
-    router.add("GET", [/\/restapi\//], async function (request, response) {
-        //console.log('get url', request.url);
-        //let url = request.url;
-        let url = request.url.replace(/\/restapi\//, '/');
-        let filepath = toFSpath(url);
-        // console.log('toFSpath',request.url,toFSpath(request.url))
-        let stats;
-        let isdir;
-        try {
-            console.log('calculating stats')
-            stats = await stat(filepath);
-            isdir = await stats.isDirectory()
-            console.log('is dir', isdir)
-        }
-        catch (error) {
-            console.log("satats error", error)
-        }
-        if (isdir) {
-            console.log('calc  filelist')
-            getfilelist(url).then(filelistobj => sendresponse(JSON.stringify(filelistobj), response, "200"));
-            // let filelistobj =  getfilelist(url);
-            console.log('calced filelist sent')
+    router.add("GET", [/\/restapi\//], function(request, response){
+        return new Promise(async function (res) {
+            //console.log('get url', request.url);
+            //let url = request.url;
+            let url = request.url.replace(/\/restapi\//, '/');
+            let filepath = toFSpath(url);
+            // console.log('toFSpath',request.url,toFSpath(request.url))
+            let stats;
+            let isdir;
+            try {
+                console.log('calculating stats');
+                stats = await stat(filepath);
+                isdir = await stats.isDirectory();
+                console.log('is dir', isdir)
+            }
+            catch (error) {
+                console.log("satats error", error)
+            }
+            if (isdir) {
+                console.log('calc  filelist');
+                getfilelist(url).then(filelistobj => sendresponse(JSON.stringify(filelistobj), response, "200"));
+                // let filelistobj =  getfilelist(url);
+                console.log('calced filelist sent')
 
-            // filelistobj = JSON.stringify(filelistobj);
-            // response.end(filelistobj)
-        }
+                // filelistobj = JSON.stringify(filelistobj);
+                // response.end(filelistobj)
+            }
+            res("GET pollver handler finished")
+        })
+
     });
 
 
+
     router.add("GET", [/pollver/], function (request, response) {
-        //console.log('pollver request recieved')
-        //let clversion = request.headers['clversion'];
-        // let waiter = {clversion:clversion, response:response};
-        let waiter = {response: response};
+        return new Promise( function (res){    //console.log('pollver request recieved')
+            //let clversion = request.headers['clversion'];
+            // let waiter = {clversion:clversion, response:response};
+            let waiter = {response: response};
         waiting.push(waiter);
         console.log('waiter adding to pool', waiting.length)
         //console.log(waiting.length);
@@ -148,17 +152,20 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
             if (found > -1) {
                 console.log('>>>', 'one was removed by timeout', waiting.length)
 
-
-                sendresponse("not updated pollingresponse", response, '203', "text/plain")
+                sendresponse("not updated pollingresponse", response, '203', "text/plain");
                 waiting.splice(found, 1);
             }
-        }, 90 * 1000);
+        }, 90 * 100);
 
+            res("GET pollver handler finished")//response.end()
+        })
 
-        ////or
-        //sendresponse("updated pollingresponse", response, '203', "text/plain")
     });
-    router.add("GET", [/files/], async function (request, response) {
+
+
+    router.add("GET", [/files/], function (request, response) {
+        return new Promise(async  function(res,req){
+
         //console.log('get url', request.url);
         let url = request.url;
 
@@ -190,40 +197,48 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
             //response.setHeader("Content-Type", mimeType);
             let respdata = await readFile(filepath);
             sendresponse(respdata, response, 200, mimeType)
-            //response.end()
+
+
         }
+            res("GET files handler finished")//response.end()
     });
-
-
+    });
     router.add("PUT", [/.*/], function (request, response) {
         return new Promise( function (res, rej){
-            res('done')
-
+            //res('done')
             //console.log('PUT',request.url, toFSpath(request.url))
-//let wrstream= createWriteStream(join(toFSpath(request.url),'inpstream'));
-// wrstream.on("error", function (error) {
-//     response.end(500, error.toString())
-// });
-// wrstream.on("finish", function () {
-//     response.end('204')
-// });
-//request.pipe(wrstream)
+            //let wrstream= createWriteStream(join(toFSpath(request.url),'inpstream'));
+            // wrstream.on("error", function (error) {
+            //     response.end(500, error.toString())
+            // });
+            // wrstream.on("finish", function () {
+            //     response.end('204')
+            // });
+            //request.pipe(wrstream)
             let form = new formidable.IncomingForm();
             form.uploadDir = toFSpath(request.url);
             form.keepExtensions = true;
-            form.on('file',  function (field, file) {
-                rename(file.path, form.uploadDir + "/" + file.name);
-                //upadating etag and initiating clients updates via folderchanged
+            form.on('file', function (field, file) {
+                console.log('file written before' , file._writeStream.closed);
+                    setTimeout(function () {
+                        console.log('file written after' , file._writeStream.closed);
+                        rename(file.path, form.uploadDir + "/" + file.name);
+                        sendresponse('ok', response, "200")
+                        res('PUT handler finished')
+
+                        //upadating etag and initiating clients updates via                                     folderchanged)
+                    }, 2500)
             });
             form.on('end',  function () {
                 console.log('>>>form.end, file uploaded');
-                sendresponse('ok', response, "200");
 
             });
+
             form.parse(request);
 
 })
     });
+
     function toFSpath(url) {
         let {pathname} = parse(url);
         let filepath = resolve(decodeURIComponent(pathname).slice(1));
@@ -279,6 +294,7 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
         console.log('---------waiting before proc', waiting.length)
         console.log('new request retrieved', request.url, request.method);
         router.proc(request, response)
+        console.log('_')
 
     });
     server.listen(3000)
