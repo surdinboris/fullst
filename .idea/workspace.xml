@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="51a52083-a6cd-4a11-8331-e60c1aaaa50b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/files/foldr2/setups_win_2_1_0822.zip" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/files/foldr2/ssdchk (3).zip" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/files/foldr2/xlsrproc.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/files/foldr2/upload_d54f7c05e79d96a57e74b146de88b799.doc" afterPath="" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -380,7 +377,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="359047000" />
+    <option name="totallyTimeSpent" value="359084000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
