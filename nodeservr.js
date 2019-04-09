@@ -16,9 +16,9 @@ let Router= function () {
 };
 
 
-Router.prototype.add = function (method, urls, callback) {
+Router.prototype.add = function (method, urls, callbk) {
     for (let url of urls){
-        let handler= {method:method, url:url, callback:callback};
+        let handler= {method:method, url:url, callbk:callbk};
         handler.validateurl= function(url) {
             return url.match(this.url)};
 
@@ -26,24 +26,24 @@ Router.prototype.add = function (method, urls, callback) {
     }
  };
 
-
-Router.prototype.proc = async function (request,response) {
+//huge effect when proc is called syncroniously!
+Router.prototype.proc = function (request,response) {
     let method = request.method;
     let url = request.url;
     let handlerfound=false;
-    for(let handler of this.handlers) {
+    this.handlers.forEach(function(handler){
         if (handler.method == method && handler.validateurl(url) != null) {
-            let handlerresult = await handler.callback(request, response);
-            console.log("/////////",handlerresult)
-            handlerfound = true;
-            break
-        }
-    }
+            handler.callbk(request, response);
+            console.log("/////////",)
+            // handlerfound = true;
 
-    if (!handlerfound){ console.log('not handled', request.url, request.method);
-        sendresponse("Not found 404", response, '404', "text/plain");
-        return
-    }
+        }
+    })
+
+    // if (!handlerfound){ console.log('not handled', request.url, request.method);
+    //     sendresponse("Not found 404", response, '404', "text/plain").then(res=>console.log(res))
+    //     return
+    // }
 
     if(request.method == "PUT"){
         console.log('waiting before folderchange', waiting.length);
@@ -52,18 +52,17 @@ Router.prototype.proc = async function (request,response) {
         // client looking into that folder
         etag = etag + 1;
         console.log('|||| waiting inside put observers calling', waiting.length);
-        for (let waiter of waiting) {
+        waiting.forEach(function (waiter){
             // waiting.forEach( function (waiter) {
             console.log('+++sending responses on folderchange', etag);
-            await sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain");
+            sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain");
             console.log('|||| waiting after put observers calling', waiting.length)
-        }
+        })
         console.log('clearing waiting ', waiting.length, 'entries');
         waiting = [];
         console.log('waiting-length', waiting.length);
         console.log('---------waiting after PUT proc', waiting.length);
     }
-
         console.log('*****request execution completed******', request.method,request.url)
 };
 
@@ -81,7 +80,6 @@ function isRestURL(requestUrl) {
     else return false
 }
 
-
 router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
     console.log('js handler started')
     let url = request.url;
@@ -97,11 +95,15 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
     });
 });
 
-    async function sendresponse(data, response, status, type) {
-        //console.log({"Content-Type": type || "text/plain", "etag":etag});
-        response.writeHead(status, {"Content-Type": type || "text/plain", "etag": etag});
-        await response.end(data)
-    }
+     function sendresponse(data, response, status, type) {
+         return new Promise(function (res) {
+             //console.log({"Content-Type": type || "text/plain", "etag":etag});
+             response.writeHead(status, {"Content-Type": type || "text/plain", "etag": etag});
+             response.end(data)
+             res('sendresponse done')
+         })
+         }
+
 
 
     router.add("GET", [/\/restapi\//], function(request, response){
@@ -152,8 +154,9 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
             if (found > -1) {
                 console.log('>>>', 'one was removed by timeout', waiting.length)
 
-                sendresponse("not updated pollingresponse", response, '203', "text/plain");
-                waiting.splice(found, 1);
+                sendresponse("not updated pollingresponse", response, '203', "text/plain").then(res=>
+                    waiting.splice(found, 1))
+
             }
         }, 90 * 100);
 
@@ -189,14 +192,14 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
             let filelistobj = await getfilelist(url);
             filelistobj = JSON.stringify(filelistobj);
             let respdata = filefront + `<script type="text/javascript">let filelist = ${filelistobj}</script>`;
-            sendresponse(respdata, response, "200", "text/html")
+            await sendresponse(respdata, response, "200", "text/html")
             // response.end(filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
         }
         if (!isdir) {
             let mimeType = await mime.getType(filepath);
             //response.setHeader("Content-Type", mimeType);
             let respdata = await readFile(filepath);
-            sendresponse(respdata, response, 200, mimeType)
+            await sendresponse(respdata, response, 200, mimeType)
 
 
         }
@@ -227,7 +230,7 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
                         res('PUT handler finished')
 
                         //upadating etag and initiating clients updates via                                     folderchanged)
-                    }, 2500)
+                    }, 500)
             });
             form.on('end',  function () {
                 console.log('>>>form.end, file uploaded');
@@ -294,7 +297,7 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
         console.log('---------waiting before proc', waiting.length)
         console.log('new request retrieved', request.url, request.method);
         router.proc(request, response)
-        console.log('_')
+
 
     });
     server.listen(3000)
