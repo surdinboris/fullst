@@ -10,6 +10,7 @@ let formidable = require("formidable");
 //constructing routing handler
 let etag = 90;
 let waiting = [];
+let handlersstore=[];
 let Router= function () {
 
     this.handlers=[]
@@ -27,18 +28,25 @@ Router.prototype.add = function (method, urls, callbk) {
  };
 
 //huge effect when proc is called syncroniously!
-Router.prototype.proc = function (request,response) {
+Router.prototype.proc = async function (request,response) {
     let method = request.method;
     let url = request.url;
-    let handlerfound=false;
-    this.handlers.forEach(function(handler){
+    //let handlerfound=false;
+    await this.handlers.forEach(async function(handler){
+        //console.log(handler.validateurl(url))
         if (handler.method == method && handler.validateurl(url) != null) {
-            handler.callbk(request, response);
-            console.log("/////////",)
+            if(handler.method != 'PUT'){
+                console.log('was choosen',handler.method, handler.url)
+                //console.log(handler.callbk)
+                await handler.callbk(request, response);
+             console.log("/////////")
+            }
+            else{
+                handler.callbk(request, response)//.then(()=>   console.log("/////////"));
+            }
             // handlerfound = true;
-
         }
-    })
+    });
 
     // if (!handlerfound){ console.log('not handled', request.url, request.method);
     //     sendresponse("Not found 404", response, '404', "text/plain").then(res=>console.log(res))
@@ -80,7 +88,8 @@ function isRestURL(requestUrl) {
     else return false
 }
 
-router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
+router.add("GET",[/style/,/js/,/node_modules/], function (request,response){
+    return new Promise(function (res) {
     console.log('js handler started')
     let url = request.url;
     let filepath = toFSpath(url);
@@ -90,16 +99,18 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
     response.setHeader("Content-Type", mimeType);
     readFile(filepath).then(rfile => {
         response.end(rfile);
+
         //response.setHeader("Content-Type", mimeType);
 
     });
-});
+        res('"GET /style/,/js/,/node_modules/ handler finished"')
+})});
 
      function sendresponse(data, response, status, type) {
          return new Promise(function (res) {
              //console.log({"Content-Type": type || "text/plain", "etag":etag});
              response.writeHead(status, {"Content-Type": type || "text/plain", "etag": etag});
-             response.end(data)
+             response.end(data);
              res('sendresponse done')
          })
          }
@@ -140,8 +151,7 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
 
 
 
-    router.add("GET", [/pollver/], function (request, response) {
-        return new Promise( function (res){    //console.log('pollver request recieved')
+    router.add("GET", [/pollver/], function (response,request){
             //let clversion = request.headers['clversion'];
             // let waiter = {clversion:clversion, response:response};
             let waiter = {response: response};
@@ -152,18 +162,17 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
         setTimeout(function () {
             let found = waiting.indexOf(waiter);
             if (found > -1) {
-                console.log('>>>', 'one was removed by timeout', waiting.length)
+                console.log('>>>', 'one was removed by timeout', waiting.length);
 
-                sendresponse("not updated pollingresponse", response, '203', "text/plain").then(res=>
-                    waiting.splice(found, 1))
+                sendresponse("not updated pollingresponse", response, '203', "text/plain");
+                    waiting.splice(found, 1);
+                console.log('waiting after splice', waiting.length)
 
             }
-        }, 90 * 100);
+        }, 90 * 1000);
 
-            res("GET pollver handler finished")//response.end()
-        })
-
-    });
+            //res("GET pollver handler finished")//response.end()
+        });
 
 
     router.add("GET", [/files/], function (request, response) {
@@ -226,7 +235,7 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
                     setTimeout(function () {
                         console.log('file written after' , file._writeStream.closed);
                         rename(file.path, form.uploadDir + "/" + file.name);
-                        sendresponse('ok', response, "200")
+                        sendresponse('ok', response, "200");
                         res('PUT handler finished')
 
                         //upadating etag and initiating clients updates via                                     folderchanged)
@@ -293,10 +302,10 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
         return filelistobj
     }
     let server = http.createServer( function (request, response) {
-        console.log('*****request execution started******', request.method,request.url)
+        console.log('*****request execution started******', request.method,request.url);
         console.log('---------waiting before proc', waiting.length)
         console.log('new request retrieved', request.url, request.method);
-        router.proc(request, response)
+         router.proc(request, response)//.then(console.log("_"))
 
 
     });
