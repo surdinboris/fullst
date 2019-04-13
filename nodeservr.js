@@ -11,7 +11,6 @@ let formidable = require("formidable");
 let etag = 90;
 let waiting = [];
 let Router= function () {
-
     this.handlers=[]
 };
 
@@ -27,43 +26,43 @@ Router.prototype.add = function (method, urls, callbk) {
  };
 
 //huge effect when proc is called syncroniously!
-Router.prototype.proc = function (request,response) {
+Router.prototype.proc =  function (request,response) {
+
     let method = request.method;
     let url = request.url;
-    let handlerfound=false;
-    this.handlers.forEach(function(handler){
+    //let handlerfound=false;
+    for(handler of this.handlers){
         if (handler.method == method && handler.validateurl(url) != null) {
             handler.callbk(request, response);
-            console.log("/////////",)
+            console.log("/////////")
             // handlerfound = true;
-
         }
-    })
+    };
 
-    // if (!handlerfound){ console.log('not handled', request.url, request.method);
-    //     sendresponse("Not found 404", response, '404', "text/plain").then(res=>console.log(res))
-    //     return
+        // if (!handlerfound){ console.log('not handled', request.url, request.method);
+        //     sendresponse("Not found 404", response, '404', "text/plain").then(res=>console.log(res))
+        //     return
+        // }
+    //
+    // if(request.method == "PUT"){
+    //     console.log('waiting before folderchange', waiting.length);
+    //     // podssible improvement is to add request.headers['folerpath']
+    //     //  register changes in specific folder and accordingly resolve requests only for
+    //     // client looking into that folder
+    //     etag = etag + 1;
+    //     console.log('|||| waiting inside put observers calling', waiting.length);
+    //     waiting.forEach(function (waiter){
+    //         // waiting.forEach( function (waiter) {
+    //         console.log('+++sending responses on folderchange', etag);
+    //         sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain");
+    //         console.log('|||| waiting after put observers calling', waiting.length)
+    //     });
+    //     console.log('clearing waiting ', waiting.length, 'entries');
+    //     waiting = [];
+    //     console.log('waiting-length', waiting.length);
+    //     console.log('---------waiting after PUT proc', waiting.length);
     // }
-
-    if(request.method == "PUT"){
-        console.log('waiting before folderchange', waiting.length);
-        // podssible improvement is to add request.headers['folerpath']
-        //  register changes in specific folder and accordingly resolve requests only for
-        // client looking into that folder
-        etag = etag + 1;
-        console.log('|||| waiting inside put observers calling', waiting.length);
-        waiting.forEach(function (waiter){
-            // waiting.forEach( function (waiter) {
-            console.log('+++sending responses on folderchange', etag);
-            sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain");
-            console.log('|||| waiting after put observers calling', waiting.length)
-        })
-        console.log('clearing waiting ', waiting.length, 'entries');
-        waiting = [];
-        console.log('waiting-length', waiting.length);
-        console.log('---------waiting after PUT proc', waiting.length);
-    }
-        console.log('*****request execution completed******', request.method,request.url)
+    //     console.log('*****request execution completed******', request.method,request.url)
 };
 
 
@@ -96,16 +95,13 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
 });
 
      function sendresponse(data, response, status, type) {
-         return new Promise(function (res) {
+
              //console.log({"Content-Type": type || "text/plain", "etag":etag});
              response.writeHead(status, {"Content-Type": type || "text/plain", "etag": etag});
              response.end(data)
-             res('sendresponse done')
-         })
+             //res('sendresponse done')
+         // })
          }
-
-
-
     router.add("GET", [/\/restapi\//], function(request, response){
         return new Promise(async function (res) {
             //console.log('get url', request.url);
@@ -133,7 +129,7 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
                 // filelistobj = JSON.stringify(filelistobj);
                 // response.end(filelistobj)
             }
-            res("GET pollver handler finished")
+            res("GET restapi handler finished")
         })
 
     });
@@ -141,33 +137,32 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
 
 
     router.add("GET", [/pollver/], function (request, response) {
-        return new Promise( function (res){    //console.log('pollver request recieved')
-            //let clversion = request.headers['clversion'];
-            // let waiter = {clversion:clversion, response:response};
-            let waiter = {response: response};
-        waiting.push(waiter);
+        console.log("POLLVER init")
+     //console.log('pollver request recieved')
+    //let clversion = request.headers['clversion'];
+    // let waiter = {clversion:clversion, response:response};
+            //let waiter = {response: response};
+        waiting.push(response);
         console.log('waiter adding to pool', waiting.length)
         //console.log(waiting.length);
 
         setTimeout(function () {
-            let found = waiting.indexOf(waiter);
+            let found = waiting.indexOf(response);
             if (found > -1) {
                 console.log('>>>', 'one was removed by timeout', waiting.length)
 
-                sendresponse("not updated pollingresponse", response, '203', "text/plain").then(res=>
-                    waiting.splice(found, 1))
+                sendresponse("not updated pollingresponse", response, '203', "text/plain")
+                    waiting.splice(found, 1)
 
             }
+
         }, 90 * 100);
 
-            res("GET pollver handler finished")//response.end()
-        })
-
-    });
+            //res("GET pollver handler finished")//response.end()
+        });
 
 
-    router.add("GET", [/files/], function (request, response) {
-        return new Promise(async  function(res,req){
+    router.add("GET", [/files/], async function (request, response) {
 
         //console.log('get url', request.url);
         let url = request.url;
@@ -178,8 +173,8 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
         let isdir;
 
         try {
-            stats = await stat(filepath);
-            isdir = await stats.isDirectory()
+            stats =  await  stat(filepath);
+            isdir =  await stats.isDirectory()
         } catch (error) {
             //console.log(error);
             if (error.code == "ENOENT") {
@@ -205,7 +200,7 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
         }
             res("GET files handler finished")//response.end()
     });
-    });
+
     router.add("PUT", [/.*/], function (request, response) {
         return new Promise( function (res, rej){
             //res('done')
@@ -292,12 +287,44 @@ router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
         }
         return filelistobj
     }
-    let server = http.createServer( function (request, response) {
-        console.log('*****request execution started******', request.method,request.url)
-        console.log('---------waiting before proc', waiting.length)
-        console.log('new request retrieved', request.url, request.method);
-        router.proc(request, response)
 
+
+
+let teswaiting = [];
+
+    function resptest(request,response) {
+        return new Promise(function (res, rej) {
+            res('ok');
+            // setTimeout(function () {
+            //     response.end('eend')
+            // }, 9900)
+
+            teswaiting.push(response);
+            console.log('waiting len', teswaiting.length)
+            setTimeout(function () {
+                let found = teswaiting.indexOf(response);
+                if (found > -1) {
+
+
+                    sendresponse("not updated pollingresponse", response, '203', "text/plain");
+
+                    teswaiting.splice(found, 1);
+                    console.log('>>>', 'one was removed by timeout', teswaiting.length)
+                }
+
+            }, 90 * 550);
+
+        });
+    }
+
+    let server = http.createServer( function (request, response) {
+        console.log('*****request execution started******', request.method,request.url);
+        console.log('---------waiting before proc', waiting.length);
+        console.log('new request retrieved', request.url, request.method);
+        //router.proc(request, response)
+        resptest(request, response)
+        //response.end()
+        console.log('===server loop end===');
 
     });
-    server.listen(3000)
+    server.listen(3000);
