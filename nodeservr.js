@@ -292,30 +292,35 @@ async function getfilelist(url) {
 
 let teswaiting = [];
 
+let setTimeoutAsync = function (response) {
+    setTimeout(function () {
+        let found = teswaiting.indexOf(response);
+        if (found > -1) {
+
+
+            sendresponse("not updated pollingresponse", response, '203', "text/plain");
+
+            teswaiting.splice(found, 1);
+            console.log('>>>', 'one was removed by timeout', teswaiting.length)
+        }
+
+    }, 90 * 550);
+    return 0
+};
+
 function resptest(request,response) {
-    return new Promise(function (res, rej) {
-        res('ok');
+
         // setTimeout(function () {
         //     response.end('eend')
         // }, 9900)
 
         teswaiting.push(response);
         console.log('waiting len', teswaiting.length)
-        setTimeout(function () {
-            let found = teswaiting.indexOf(response);
-            if (found > -1) {
+        setTimeoutAsync(response)
 
 
-                sendresponse("not updated pollingresponse", response, '203', "text/plain");
+    }
 
-                teswaiting.splice(found, 1);
-                console.log('>>>', 'one was removed by timeout', teswaiting.length)
-            }
-
-        }, 90 * 550);
-
-    });
-}
 
 let server = http.createServer( function (request, response) {
     console.log('*****request execution started******', request.method,request.url);
