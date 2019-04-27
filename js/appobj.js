@@ -77,7 +77,7 @@ $(function () {
     }
 
     //detecting server version
-    async function startpolling(){
+     async function startpolling(){
         let pollcycle=0
         while (true) {
             pollcycle=pollcycle+1;

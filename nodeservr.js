@@ -72,14 +72,14 @@ let router = new Router();
 // router.add('put','www2',function(){console.log('www2')});
 
 function isRestURL(requestUrl) {
-    let idfilter = /\/restapi\//;
+    let idfilter = /^\/restapi\//;
     let result =idfilter.exec(requestUrl);
     if(result && result != null){
         return result;}
     else return false
 }
 
-router.add("GET",[/style/,/js/,/node_modules/],  function (request,response) {
+router.add("GET",[/^\/style/,/^\/js/,/^\/node_modules/],  function (request,response) {
     console.log('js handler started')
     let url = request.url;
     let filepath = toFSpath(url);
@@ -102,9 +102,9 @@ function sendresponse(data, response, status, type) {
     //res('sendresponse done')
     // })
 }
-router.add("GET", [/\/restapi\//], function(request, response){
+router.add("GET", [/^\/restapi\//], function(request, response){
     return new Promise(async function (res) {
-        //console.log('get url', request.url);
+        console.log('get url', request.url, 'restapi');
         //let url = request.url;
         let url = request.url.replace(/\/restapi\//, '/');
         let filepath = toFSpath(url);
@@ -136,7 +136,7 @@ router.add("GET", [/\/restapi\//], function(request, response){
 
 
 
-router.add("GET", [/pollver/], function (request, response) {
+router.add("GET", [/^\/pollver/], function (request, response) {
     console.log("POLLVER init")
     //console.log('pollver request recieved')
     //let clversion = request.headers['clversion'];
@@ -162,9 +162,9 @@ router.add("GET", [/pollver/], function (request, response) {
 });
 
 
-router.add("GET", [/files/], async function (request, response) {
+router.add("GET", [/^\/files/], async function (request, response) {
 
-    //console.log('get url', request.url);
+    console.log('get url', request.url);
     let url = request.url;
 
     let filepath = toFSpath(url);
@@ -187,18 +187,18 @@ router.add("GET", [/files/], async function (request, response) {
         let filelistobj = await getfilelist(url);
         filelistobj = JSON.stringify(filelistobj);
         let respdata = filefront + `<script type="text/javascript">let filelist = ${filelistobj}</script>`;
-        await sendresponse(respdata, response, "200", "text/html")
+        sendresponse(respdata, response, "200", "text/html")
         // response.end(filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
     }
     if (!isdir) {
         let mimeType = await mime.getType(filepath);
         //response.setHeader("Content-Type", mimeType);
         let respdata = await readFile(filepath);
-        await sendresponse(respdata, response, 200, mimeType)
+        sendresponse(respdata, response, 200, mimeType)
 
 
     }
-    res("GET files handler finished")//response.end()
+    //res("GET files handler finished")//response.end()
 });
 
 router.add("PUT", [/.*/], function (request, response) {
@@ -218,17 +218,28 @@ router.add("PUT", [/.*/], function (request, response) {
         form.keepExtensions = true;
         form.on('file', function (field, file) {
             console.log('file written before' , file._writeStream.closed);
-            setTimeout(function () {
+
                 console.log('file written after' , file._writeStream.closed);
                 rename(file.path, form.uploadDir + "/" + file.name);
                 sendresponse('ok', response, "200")
-                res('PUT handler finished')
+
+            res('PUT handler finished')
 
                 //upadating etag and initiating clients updates via                                     folderchanged)
-            }, 500)
+
         });
         form.on('end',  function () {
+            etag=etag+1
             console.log('>>>form.end, file uploaded');
+            waiting.forEach(function (inwaitresp){
+                let found = waiting.indexOf(inwaitresp);
+                if(found){
+                    waiting.splice(found,1)
+                }
+                console.log(inwaitresp)
+                sendresponse('ok',inwaitresp, 200)
+            });
+
 
         });
 
@@ -288,48 +299,45 @@ async function getfilelist(url) {
     return filelistobj
 }
 
-
-
-let teswaiting = [];
-
-let setTimeoutAsync = function (response) {
-    setTimeout(function () {
-        let found = teswaiting.indexOf(response);
-        if (found > -1) {
-
-
-            sendresponse("not updated pollingresponse", response, '203', "text/plain");
-
-            teswaiting.splice(found, 1);
-            console.log('>>>', 'one was removed by timeout', teswaiting.length)
-        }
-
-    }, 90 * 550);
-    return 0
-};
-
-function resptest(request,response) {
-
-        // setTimeout(function () {
-        //     response.end('eend')
-        // }, 9900)
-
-        teswaiting.push(response);
-        console.log('waiting len', teswaiting.length)
-        setTimeoutAsync(response)
-
-
-    }
+// let teswaiting = [];
+// let setTimeoutAsync = function (response) {
+//     setTimeout(function () {
+//         let found = teswaiting.indexOf(response);
+//         if (found > -1) {
+//             sendresponse("not updated pollingresponse removing", response, '203', "text/plain");
+//             teswaiting.splice(found, 1);
+//             console.log('>>>', 'one was removed by timeout', teswaiting.length)
+//         }
+//
+//     }, 90 * 550);
+//     return 0
+// };
+//
+// function resptest(request,response) {
+//         // setTimeout(function () {
+//         //     response.end('eend')
+//         // }, 9900)
+//         teswaiting.push(response);
+//         console.log('waiting len', teswaiting.length)
+//         setTimeoutAsync(response)
+//     }
 
 
 let server = http.createServer( function (request, response) {
-    console.log('*****request execution started******', request.method,request.url);
-    console.log('---------waiting before proc', waiting.length);
-    console.log('new request retrieved', request.url, request.method);
-    //router.proc(request, response)
-    resptest(request, response)
-    //response.end()
-    console.log('===server loop end===');
+    router.proc(request, response)
+
+    // console.log('*****request execution started******', request.method,request.url);
+    // console.log('---------waiting before proc', waiting.length);
+    // console.log('new request retrieved', request.url, request.method);
+    // //router.proc(request, response)
+    // if ('/files/foldr2/' == request.url){
+    //     resptest(request, response);
+    // }
+    // else {
+    //     response.end('fast end')
+    // }
+    //
+    // console.log('===server loop end===');
 
 });
 server.listen(3000);
