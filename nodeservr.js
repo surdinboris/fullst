@@ -97,6 +97,7 @@ router.add("GET",[/^\/style/,/^\/js/,/^\/node_modules/],  function (request,resp
 function sendresponse(data, response, status, type) {
 
     //console.log({"Content-Type": type || "text/plain", "etag":etag});
+    console.log('sendresp', status)
     response.writeHead(status, {"Content-Type": type || "text/plain", "etag": etag});
     response.end(data)
     //res('sendresponse done')
@@ -202,50 +203,59 @@ router.add("GET", [/^\/files/], async function (request, response) {
 });
 
 router.add("PUT", [/.*/], function (request, response) {
-    return new Promise( function (res, rej){
-        //res('done')
-        //console.log('PUT',request.url, toFSpath(request.url))
-        //let wrstream= createWriteStream(join(toFSpath(request.url),'inpstream'));
-        // wrstream.on("error", function (error) {
-        //     response.end(500, error.toString())
+
+
+    //res('done')
+    //console.log('PUT',request.url, toFSpath(request.url))
+    //let wrstream= createWriteStream(join(toFSpath(request.url),'inpstream'));
+    // wrstream.on("error", function (error) {
+    //     response.end(500, error.toString())
+    // });
+    // wrstream.on("finish", function () {
+    //     response.end('204')
+    // });
+    //request.pipe(wrstream)
+    let form = new formidable.IncomingForm();
+    form.uploadDir = toFSpath(request.url);
+    form.keepExtensions = true;
+
+    form.on('file', function (field, file) {
+        console.log('file written before', file._writeStream.closed);
+
+        console.log('file written after', file._writeStream.closed);
+        rename(file.path, form.uploadDir + "/" + file.name);
+        // sendresponse('ok', response, "201")
+
+        console.log('PUT handler finished')
+
+        //upadating etag and initiating clients updates via                                     folderchanged)
+
+    });
+    form.on('end',  function () {
+
+        console.log('>>>form.end, all files uploaded', waiting.length);
+
+        etag = etag + 1;
+        // waiting.forEach(function (inwaitresp) {
+        //     console.log('--->>>resolving!? inwaitresp');
+        //     sendresponse('ok', inwaitresp, 201);
+        //     console.log(waiting.length)
+        //     waiting =[]
+        //     console.log(waiting.length)
         // });
-        // wrstream.on("finish", function () {
-        //     response.end('204')
-        // });
-        //request.pipe(wrstream)
-        let form = new formidable.IncomingForm();
-        form.uploadDir = toFSpath(request.url);
-        form.keepExtensions = true;
-        form.on('file', function (field, file) {
-            console.log('file written before' , file._writeStream.closed);
+    });
 
-                console.log('file written after' , file._writeStream.closed);
-                rename(file.path, form.uploadDir + "/" + file.name);
-                sendresponse('ok', response, "200")
+    form.parse(request);
 
-            res('PUT handler finished')
-
-                //upadating etag and initiating clients updates via                                     folderchanged)
-
-        });
-        form.on('end',  function () {
-            etag=etag+1
-            console.log('>>>form.end, file uploaded');
-            waiting.forEach(function (inwaitresp){
-                let found = waiting.indexOf(inwaitresp);
-                if(found){
-                    waiting.splice(found,1)
-                }
-                console.log(inwaitresp)
-                sendresponse('ok',inwaitresp, 200)
-            });
+        waiting.forEach(function (inwaitresp) {
+            console.log('--->>>resolving!? inwaitresp');
+            sendresponse('ok', inwaitresp, 201);
+            console.log(waiting.length)
+            waiting =[]
+            console.log(waiting.length)
+        })
 
 
-        });
-
-        form.parse(request);
-
-    })
 });
 
 function toFSpath(url) {
