@@ -95,13 +95,15 @@ router.add("GET",[/^\/style/,/^\/js/,/^\/node_modules/],  function (request,resp
 });
 
 function sendresponse(data, response, status, type) {
+    return new Promise(function (resolve) {
+        //console.log({"Content-Type": type || "text/plain", "etag":etag});
+        console.log('sendresp', status)
+        response.writeHead(status, {"Content-Type": type || "text/plain", "etag": etag});
+        response.end(data)
+        resolve('sendresponse done')
+        // })
+    })
 
-    //console.log({"Content-Type": type || "text/plain", "etag":etag});
-    console.log('sendresp', status)
-    response.writeHead(status, {"Content-Type": type || "text/plain", "etag": etag});
-    response.end(data)
-    //res('sendresponse done')
-    // })
 }
 router.add("GET", [/^\/restapi\//], function(request, response){
     return new Promise(async function (res) {
@@ -123,9 +125,10 @@ router.add("GET", [/^\/restapi\//], function(request, response){
         }
         if (isdir) {
             console.log('calc  filelist');
-            getfilelist(url).then(filelistobj => sendresponse(JSON.stringify(filelistobj), response, "200"));
+            getfilelist(url).then(filelistobj =>
+                sendresponse(JSON.stringify(filelistobj), response, "200"));
             // let filelistobj =  getfilelist(url);
-            console.log('calced filelist sent')
+            console.log('calc-ed filelist sent')
 
             // filelistobj = JSON.stringify(filelistobj);
             // response.end(filelistobj)
@@ -152,8 +155,9 @@ router.add("GET", [/^\/pollver/], function (request, response) {
         if (found > -1) {
             console.log('>>>', 'one was removed by timeout', waiting.length)
 
-            sendresponse("not updated pollingresponse", response, '203', "text/plain")
-            waiting.splice(found, 1)
+            sendresponse("not updated pollingresponse", response, '203', "text/plain").then
+            (()=>waiting.splice(found, 1))
+
 
         }
 
@@ -236,24 +240,21 @@ router.add("PUT", [/.*/], function (request, response) {
         console.log('>>>form.end, all files uploaded', waiting.length);
 
         etag = etag + 1;
-        // waiting.forEach(function (inwaitresp) {
-        //     console.log('--->>>resolving!? inwaitresp');
-        //     sendresponse('ok', inwaitresp, 201);
-        //     console.log(waiting.length)
-        //     waiting =[]
-        //     console.log(waiting.length)
-        // });
+        waiting.forEach(function (inwaitresp) {
+            console.log('--->>>resolving!? inwaitresp');
+            sendresponse('ok', inwaitresp, 201).then((res)=>{
+                console.log('sendresponse resolved', res)
+                console.log(waiting.length);
+                waiting =[];
+                console.log(waiting.length)
+            });
+
+        });
     });
 
     form.parse(request);
 
-        waiting.forEach(function (inwaitresp) {
-            console.log('--->>>resolving!? inwaitresp');
-            sendresponse('ok', inwaitresp, 201);
-            console.log(waiting.length)
-            waiting =[]
-            console.log(waiting.length)
-        })
+
 
 
 });
