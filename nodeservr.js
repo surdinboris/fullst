@@ -27,7 +27,7 @@ Router.prototype.add = function (method, urls, callbk) {
 
 //huge effect when proc is called syncroniously!
 Router.prototype.proc =  function (request,response) {
-    return new Promise((res) => {
+    return new Promise((res,rej) => {
 
         let method = request.method;
         let url = request.url;
@@ -37,9 +37,10 @@ Router.prototype.proc =  function (request,response) {
                 console.log('trying handler', handler)
                 handler.callbk(request, response).then(()=>console.log("/////////",request.method));
                 // handlerfound = true;
-                return
+                res()
             }
         }
+        rej('no appropriate handler found')
     })
 
 };
@@ -54,7 +55,7 @@ function isRestURL(requestUrl) {
     else return false
 }
 
-router.add("GET",[/^\/style/,/^\/js/,/^\/node_modules/],  function (request,response) {
+router.add("GET",[/^\/style/,/^\/js/,/^\/node_modules/,/^\/favicon\.ico/],  function (request,response) {
     return new Promise(resolve => {
         console.log('js handler started');
         let url = request.url;
@@ -67,15 +68,17 @@ router.add("GET",[/^\/style/,/^\/js/,/^\/node_modules/],  function (request,resp
             //response.setHeader("Content-Type", mimeType);
 
         });
+        resolve()
     })
 });
 
 function sendresponse(data, response, status, type) {
     return new Promise(function (resolve) {
         //console.log({"Content-Type": type || "text/plain", "etag":etag});
-        console.log('sendresp', status)
+        console.log('sendresp', status);
         response.writeHead(status, {"Content-Type": type || "text/plain", "etag": etag});
-        response.end(data)
+        response.end(data);
+        resolve()
         // })
     })
 
@@ -116,21 +119,24 @@ router.add("GET", [/^\/restapi\//],  function(request, response){
 
 router.add("GET", [/^\/pollver/], function (request, response) {
    return new Promise(res => {
-       console.log("POLLVER init")
+       console.log("POLLVER init");
        //console.log('pollver request recieved')
        //let clversion = request.headers['clversion'];
        // let waiter = {clversion:clversion, response:response};
        //let waiter = {response: response};
        waiting.push(response);
-       console.log('waiter adding to pool', waiting.length)
+       console.log('waiter adding to pool', waiting.length);
        //console.log(waiting.length);
 
        setTimeout(function () {
            let found = waiting.indexOf(response);
            if (found > -1) {
-               console.log('>>>', 'one was removed by timeout', waiting.length)
+               console.log('>>>', 'one will be removed by timeout', waiting.length);
                sendresponse("not updated pollingresponse", response, '203', "text/plain").then
-               (()=>waiting.splice(found, 1))
+               (()=> {
+                   waiting.splice(found, 1);
+                   console.log('>>>', 'one will be removed by timeout', waiting.length)
+               })
            }
        }, 90 * 100);
        res("GET pollver handler finished")//response.end()
@@ -177,6 +183,19 @@ router.add("GET", [/^\/files/], async function (request, response) {
     //res("GET files handler finished")//response.end()
 });
 
+function waitingAsyncSend(){
+    return new Promise(resolve=>{
+        waiting.forEach(function (inwaitresp) {
+            console.log('--->>>resolving!? inwaitresp');
+            sendresponse('ok', inwaitresp, 201).then((res)=>{
+                console.log('sendresponse resolved', res)
+
+            });
+        });
+        resolve()
+
+    })
+}
 router.add("PUT", [/.*/], async function (request, response) {
 
     //res('done')
@@ -211,15 +230,15 @@ router.add("PUT", [/.*/], async function (request, response) {
         console.log('>>>form.end, all files uploaded', waiting.length);
 
         etag = etag + 1;
-        waiting.forEach(function (inwaitresp) {
-            console.log('--->>>resolving!? inwaitresp');
-            sendresponse('ok', inwaitresp, 201).then((res)=>{
-                console.log('sendresponse resolved', res)
-                console.log(waiting.length);
-                waiting =[];
-                console.log(waiting.length)
-            });
-        });
+        // waiting.forEach(function (inwaitresp) {
+        //     console.log('--->>>resolving!? inwaitresp');
+        //     sendresponse('ok', inwaitresp, 201).then((res)=>{
+        //         console.log('sendresponse resolved', res)
+        //
+        //     });
+        // });
+        waitingAsyncSend().then(()=>
+       waiting=[])
     });
     form.parse(request);
 });
