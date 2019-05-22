@@ -19,57 +19,32 @@ Router.prototype.add = function (method, urls, callbk) {
     for (let url of urls){
         let handler= {method:method, url:url, callbk:callbk};
         handler.validateurl= function(url) {
+            console.log(url, 'vs', this.url,url.match(this.url));
             return url.match(this.url)};
-
         this.handlers.push(handler);
     }
 };
 
 //huge effect when proc is called syncroniously!
 Router.prototype.proc =  function (request,response) {
+    return new Promise((res) => {
 
-    let method = request.method;
-    let url = request.url;
-    //let handlerfound=false;
-    for(handler of this.handlers){
-        if (handler.method == method && handler.validateurl(url) != null) {
-            handler.callbk(request, response);
-            console.log("/////////")
-            // handlerfound = true;
+        let method = request.method;
+        let url = request.url;
+        let handlerfound=false;
+        for(handler of this.handlers){
+            if (handler.method == method && handler.validateurl(url) != null) {
+                console.log('trying handler', handler)
+                handler.callbk(request, response).then(()=>console.log("/////////",request.method));
+                // handlerfound = true;
+                return
+            }
         }
-    };
+    })
 
-    // if (!handlerfound){ console.log('not handled', request.url, request.method);
-    //     sendresponse("Not found 404", response, '404', "text/plain").then(res=>console.log(res))
-    //     return
-    // }
-    //
-    // if(request.method == "PUT"){
-    //     console.log('waiting before folderchange', waiting.length);
-    //     // podssible improvement is to add request.headers['folerpath']
-    //     //  register changes in specific folder and accordingly resolve requests only for
-    //     // client looking into that folder
-    //     etag = etag + 1;
-    //     console.log('|||| waiting inside put observers calling', waiting.length);
-    //     waiting.forEach(function (waiter){
-    //         // waiting.forEach( function (waiter) {
-    //         console.log('+++sending responses on folderchange', etag);
-    //         sendresponse("updated pollingresponse sending", waiter.response, '201', "text/plain");
-    //         console.log('|||| waiting after put observers calling', waiting.length)
-    //     });
-    //     console.log('clearing waiting ', waiting.length, 'entries');
-    //     waiting = [];
-    //     console.log('waiting-length', waiting.length);
-    //     console.log('---------waiting after PUT proc', waiting.length);
-    // }
-    //     console.log('*****request execution completed******', request.method,request.url)
 };
 
-
 let router = new Router();
-
-// router.add('post','www',function(){console.log('www')});
-// router.add('put','www2',function(){console.log('www2')});
 
 function isRestURL(requestUrl) {
     let idfilter = /^\/restapi\//;
@@ -80,18 +55,19 @@ function isRestURL(requestUrl) {
 }
 
 router.add("GET",[/^\/style/,/^\/js/,/^\/node_modules/],  function (request,response) {
-    console.log('js handler started')
-    let url = request.url;
-    let filepath = toFSpath(url);
-    let mimeType = mime.getType(filepath);
+    return new Promise(resolve => {
+        console.log('js handler started');
+        let url = request.url;
+        let filepath = toFSpath(url);
+        let mimeType = mime.getType(filepath);
+        response.setHeader("Content-Type", mimeType);
+        ///!implement via sendresponse asyncr
+        readFile(filepath).then(rfile => {
+            response.end(rfile);
+            //response.setHeader("Content-Type", mimeType);
 
-
-    response.setHeader("Content-Type", mimeType);
-    readFile(filepath).then(rfile => {
-        response.end(rfile);
-        //response.setHeader("Content-Type", mimeType);
-
-    });
+        });
+    })
 });
 
 function sendresponse(data, response, status, type) {
@@ -100,12 +76,11 @@ function sendresponse(data, response, status, type) {
         console.log('sendresp', status)
         response.writeHead(status, {"Content-Type": type || "text/plain", "etag": etag});
         response.end(data)
-        resolve('sendresponse done')
         // })
     })
 
 }
-router.add("GET", [/^\/restapi\//], function(request, response){
+router.add("GET", [/^\/restapi\//],  function(request, response){
     return new Promise(async function (res) {
         console.log('get url', request.url, 'restapi');
         //let url = request.url;
@@ -139,31 +114,27 @@ router.add("GET", [/^\/restapi\//], function(request, response){
 });
 
 
-
 router.add("GET", [/^\/pollver/], function (request, response) {
-    console.log("POLLVER init")
-    //console.log('pollver request recieved')
-    //let clversion = request.headers['clversion'];
-    // let waiter = {clversion:clversion, response:response};
-    //let waiter = {response: response};
-    waiting.push(response);
-    console.log('waiter adding to pool', waiting.length)
-    //console.log(waiting.length);
+   return new Promise(res => {
+       console.log("POLLVER init")
+       //console.log('pollver request recieved')
+       //let clversion = request.headers['clversion'];
+       // let waiter = {clversion:clversion, response:response};
+       //let waiter = {response: response};
+       waiting.push(response);
+       console.log('waiter adding to pool', waiting.length)
+       //console.log(waiting.length);
 
-    setTimeout(function () {
-        let found = waiting.indexOf(response);
-        if (found > -1) {
-            console.log('>>>', 'one was removed by timeout', waiting.length)
-
-            sendresponse("not updated pollingresponse", response, '203', "text/plain").then
-            (()=>waiting.splice(found, 1))
-
-
-        }
-
-    }, 90 * 100);
-
-    //res("GET pollver handler finished")//response.end()
+       setTimeout(function () {
+           let found = waiting.indexOf(response);
+           if (found > -1) {
+               console.log('>>>', 'one was removed by timeout', waiting.length)
+               sendresponse("not updated pollingresponse", response, '203', "text/plain").then
+               (()=>waiting.splice(found, 1))
+           }
+       }, 90 * 100);
+       res("GET pollver handler finished")//response.end()
+   })
 });
 
 
@@ -184,30 +155,29 @@ router.add("GET", [/^\/files/], async function (request, response) {
         //console.log(error);
         if (error.code == "ENOENT") {
             sendresponse("Resource not found 404", response, '404', "text/plain")
-            return
+
         }
     }
+
     if (isdir) {
         let filefront = await readFile('fileview.html');
         let filelistobj = await getfilelist(url);
         filelistobj = JSON.stringify(filelistobj);
         let respdata = filefront + `<script type="text/javascript">let filelist = ${filelistobj}</script>`;
-        sendresponse(respdata, response, "200", "text/html")
+        await sendresponse(respdata, response, "200", "text/html")
         // response.end(filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
     }
     if (!isdir) {
         let mimeType = await mime.getType(filepath);
         //response.setHeader("Content-Type", mimeType);
         let respdata = await readFile(filepath);
-        sendresponse(respdata, response, 200, mimeType)
-
+        await sendresponse(respdata, response, 200, mimeType)
 
     }
     //res("GET files handler finished")//response.end()
 });
 
-router.add("PUT", [/.*/], function (request, response) {
-
+router.add("PUT", [/.*/], async function (request, response) {
 
     //res('done')
     //console.log('PUT',request.url, toFSpath(request.url))
@@ -219,6 +189,7 @@ router.add("PUT", [/.*/], function (request, response) {
     //     response.end('204')
     // });
     //request.pipe(wrstream)
+   // ___________
     let form = new formidable.IncomingForm();
     form.uploadDir = toFSpath(request.url);
     form.keepExtensions = true;
@@ -248,15 +219,9 @@ router.add("PUT", [/.*/], function (request, response) {
                 waiting =[];
                 console.log(waiting.length)
             });
-
         });
     });
-
     form.parse(request);
-
-
-
-
 });
 
 function toFSpath(url) {
@@ -333,10 +298,13 @@ async function getfilelist(url) {
 //         setTimeoutAsync(response)
 //     }
 
+// for (let han of router.handlers){
+//     console.log(han.validateurl.toString())
+// }
 
-let server = http.createServer( function (request, response) {
+let server = http.createServer(function (request, response){
+
     router.proc(request, response)
-
     // console.log('*****request execution started******', request.method,request.url);
     // console.log('---------waiting before proc', waiting.length);
     // console.log('new request retrieved', request.url, request.method);
