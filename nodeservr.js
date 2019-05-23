@@ -83,25 +83,39 @@ function sendresponse(data, response, status, type) {
     })
 
 }
+
+
+function getstatsAsync(filepath) {
+    return new Promise((res,rej)=>{
+                stat(filepath).catch(error =>rej(error)).then(stats=>{
+                    let isdir = stats.isDirectory();
+                    res({stats:stats, isdir:isdir})
+                });
+        }
+    )}
+
 router.add("GET", [/^\/restapi\//],  function(request, response){
-    return new Promise(async function (res) {
+    return new Promise(function (res,rej) {
         console.log('get url', request.url, 'restapi');
         //let url = request.url;
         let url = request.url.replace(/\/restapi\//, '/');
         let filepath = toFSpath(url);
         // console.log('toFSpath',request.url,toFSpath(request.url))
-        let stats;
-        let isdir;
-        try {
-            console.log('calculating stats');
-            stats = await stat(filepath);
-            isdir = await stats.isDirectory();
-            console.log('is dir', isdir)
-        }
-        catch (error) {
-            console.log("satats error", error)
-        }
-        if (isdir) {
+        // let stats;
+        // let isdir;
+        // try {
+        //     console.log('calculating stats');
+        //     stats =  stat(filepath);
+        //     isdir =  stats.isDirectory();
+        //     console.log('is dir', isdir)
+        // }
+        // catch (error) {
+        //     console.log("satats error", error);
+        //     rej(error)
+        // }
+        getstatsAsync(filepath).catch(err=> sendresponse("Resource not found 404", response, '404', "text/plain")).then(stats=>{
+            if (stats.isdir) {
+
             console.log('calc  filelist');
             getfilelist(url).then(filelistobj =>
                 sendresponse(JSON.stringify(filelistobj), response, "200"));
@@ -110,8 +124,12 @@ router.add("GET", [/^\/restapi\//],  function(request, response){
 
             // filelistobj = JSON.stringify(filelistobj);
             // response.end(filelistobj)
+            res("GET restapi handler finished")
         }
-        res("GET restapi handler finished")
+        else {
+            rej("error - restapi call not directory")
+        }
+    })
     })
 
 });
@@ -143,44 +161,48 @@ router.add("GET", [/^\/pollver/], function (request, response) {
    })
 });
 
+router.add("GET", [/^\/files/], function (request, response) {
+    return new Promise((res,rej)=>{
+        console.log('get url', request.url);
+        let url = request.url;
 
-router.add("GET", [/^\/files/], async function (request, response) {
+        let filepath = toFSpath(url);
+        // console.log('toFSpath',request.url,toFSpath(request.url))
+        // let stats;
+        // let isdir;
+        //
+        // try {
+        //     stats =   stat(filepath);
+        //     isdir =   stats.isDirectory();
+        //     console.log("===stats===",stats)
+        // } catch (error) {
+        //     //console.log(error);
+        //     if (error.code == "ENOENT") {
+        //         sendresponse("Resource not found 404", response, '404', "text/plain")
+        //
+        //     }
+        // }
+        getstatsAsync(filepath).catch(err=> sendresponse("Resource not found 404", response, '404', "text/plain")).then(stats=>{
+            console.log('++++++++stats+++++++', stats)
+            if (stats.isdir) {
+                let filefront = readFile('fileview.html');
+                let filelistobj =  getfilelist(url);
+                filelistobj = JSON.stringify(filelistobj);
+                let respdata = filefront + `<script type="text/javascript">let filelist = ${filelistobj}</script>`;
+                sendresponse(respdata, response, "200", "text/html")
+                // response.end(filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
+            }
+            if (!stats.isdir) {
+                let mimeType =  mime.getType(filepath);
+                //response.setHeader("Content-Type", mimeType);
+                let respdata =  readFile(filepath);
+                sendresponse(respdata, response, 200, mimeType)
 
-    console.log('get url', request.url);
-    let url = request.url;
+            }
+            res("GET files handler finished")//response.end()
+        })});
 
-    let filepath = toFSpath(url);
-    // console.log('toFSpath',request.url,toFSpath(request.url))
-    let stats;
-    let isdir;
 
-    try {
-        stats =  await  stat(filepath);
-        isdir =  await stats.isDirectory()
-    } catch (error) {
-        //console.log(error);
-        if (error.code == "ENOENT") {
-            sendresponse("Resource not found 404", response, '404', "text/plain")
-
-        }
-    }
-
-    if (isdir) {
-        let filefront = await readFile('fileview.html');
-        let filelistobj = await getfilelist(url);
-        filelistobj = JSON.stringify(filelistobj);
-        let respdata = filefront + `<script type="text/javascript">let filelist = ${filelistobj}</script>`;
-        await sendresponse(respdata, response, "200", "text/html")
-        // response.end(filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
-    }
-    if (!isdir) {
-        let mimeType = await mime.getType(filepath);
-        //response.setHeader("Content-Type", mimeType);
-        let respdata = await readFile(filepath);
-        await sendresponse(respdata, response, 200, mimeType)
-
-    }
-    //res("GET files handler finished")//response.end()
 });
 
 function waitingAsyncSend(){
