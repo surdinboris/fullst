@@ -27,7 +27,7 @@ Router.prototype.add = function (method, urls, callbk) {
 
 //huge effect when proc is called syncroniously!
 Router.prototype.proc =  function (request,response) {
-    return new Promise((res,rej) => {
+
 
         let method = request.method;
         let url = request.url;
@@ -37,11 +37,11 @@ Router.prototype.proc =  function (request,response) {
                 console.log('trying handler', handler)
                 handler.callbk(request, response).then(()=>console.log("/////////",request.method));
                 // handlerfound = true;
-                res()
+                //res()
             }
         }
-        rej('no appropriate handler found')
-    })
+        //rej('no appropriate handler found')
+
 
 };
 
@@ -162,7 +162,7 @@ router.add("GET", [/^\/pollver/], function (request, response) {
 });
 
 router.add("GET", [/^\/files/], function (request, response) {
-    return new Promise((res,rej)=>{
+    return new Promise((res, rej) => {
         console.log('get url', request.url);
         let url = request.url;
 
@@ -182,30 +182,32 @@ router.add("GET", [/^\/files/], function (request, response) {
         //
         //     }
         // }
-        getstatsAsync(filepath).catch(err=> sendresponse("Resource not found 404", response, '404', "text/plain")).then(stats=>{
-            console.log('++++++++stats+++++++', stats)
+        getstatsAsync(filepath).catch(err => sendresponse(err, response, '404', "text/plain")).then(stats => {
+            //console.log('++++++++stats+++++++', stats);
             if (stats.isdir) {
-                let filefront = readFile('fileview.html');
-                getfilelist(url).then(filelistobj=> {
-                    console.log(filelistobj)
-                    filelistobj = JSON.stringify(filelistobj);
-                    let respdata = filefront + `<script type="text/javascript">let filelist = ${filelistobj}</script>`;
-                    sendresponse(respdata, response, "200", "text/html")
-                    // response.end(filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
+                readFile('fileview.html').then(filefront => {
+                    getfilelist(url).then(filelistobj => {
+                        //console.log(filelistobj);
+                        filelistobj = JSON.stringify(filelistobj);
+                        let respdata = filefront + `<script type="text/javascript">let filelist = ${filelistobj}</script>`;
+                        console.log(respdata);
+                        sendresponse(respdata, response, "200", "text/html")
+                        // response.end(filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
+                        res("GET files handler finished")//response.end()
+                    });
                 })
-                }
-                if (!stats.isdir) {
-                    let mimeType =  mime.getType(filepath);
-                    //response.setHeader("Content-Type", mimeType);
-                    let respdata =  readFile(filepath);
-                    sendresponse(respdata, response, 200, mimeType)
+            }
+            if (!stats.isdir) {
+                let mimeType = mime.getType(filepath);
+                //response.setHeader("Content-Type", mimeType);
+                readFile(filepath).then(respdata=>{sendresponse(respdata, response, 200, mimeType);
+                    res("GET files handler finished")//response.end()});
 
-                }
-                res("GET files handler finished")//response.end()
+            })
 
 
-})
-
+        }
+    })
 })});
 
 function waitingAsyncSend(){
