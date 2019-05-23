@@ -186,24 +186,27 @@ router.add("GET", [/^\/files/], function (request, response) {
             console.log('++++++++stats+++++++', stats)
             if (stats.isdir) {
                 let filefront = readFile('fileview.html');
-                let filelistobj =  getfilelist(url);
-                filelistobj = JSON.stringify(filelistobj);
-                let respdata = filefront + `<script type="text/javascript">let filelist = ${filelistobj}</script>`;
-                sendresponse(respdata, response, "200", "text/html")
-                // response.end(filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
-            }
-            if (!stats.isdir) {
-                let mimeType =  mime.getType(filepath);
-                //response.setHeader("Content-Type", mimeType);
-                let respdata =  readFile(filepath);
-                sendresponse(respdata, response, 200, mimeType)
+                getfilelist(url).then(filelistobj=> {
+                    console.log(filelistobj)
+                    filelistobj = JSON.stringify(filelistobj);
+                    let respdata = filefront + `<script type="text/javascript">let filelist = ${filelistobj}</script>`;
+                    sendresponse(respdata, response, "200", "text/html")
+                    // response.end(filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
+                })
+                }
+                if (!stats.isdir) {
+                    let mimeType =  mime.getType(filepath);
+                    //response.setHeader("Content-Type", mimeType);
+                    let respdata =  readFile(filepath);
+                    sendresponse(respdata, response, 200, mimeType)
 
-            }
-            res("GET files handler finished")//response.end()
-        })});
+                }
+                res("GET files handler finished")//response.end()
 
 
-});
+})
+
+})});
 
 function waitingAsyncSend(){
     return new Promise(resolve=>{
@@ -277,6 +280,7 @@ function toFSpath(url) {
 }
 
 //function that reads content of dir and returns object
+//rewrite this to promise
 async function getfilelist(url) {
     let filepath = toFSpath(url);
     let filelist = await readdir(filepath);
