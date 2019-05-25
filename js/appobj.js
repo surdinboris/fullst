@@ -78,11 +78,11 @@ $(function () {
 
     //detecting server version
      async function startpolling(){
-        let pollcycle=0
+        let pollcycle=0;
         while (true) {
             pollcycle=pollcycle+1;
             console.log("startpolling pollcycle", pollcycle);
-            let srversion  =await  getrestdata(currurl, "pollver");
+            let srversion  = await  getrestdata(currurl, "pollver");
             //alert(srversion+''+curver);
             if(srversion == curver){
                 console.log("srversion == curver",srversion,curver );
@@ -206,7 +206,7 @@ $(function () {
                 console.log("xhr", currurl);
                 xhr.open('PUT', currurl, true);
                 xhr.send(fd);
-                startpolling();
+                //startpolling();
                 drawpopup();
                 //$(window).trigger('popstate',[currurl])
             }
