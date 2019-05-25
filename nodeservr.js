@@ -19,7 +19,7 @@ Router.prototype.add = function (method, urls, callbk) {
     for (let url of urls){
         let handler= {method:method, url:url, callbk:callbk};
         handler.validateurl= function(url) {
-            console.log(url, 'vs', this.url,url.match(this.url));
+            //console.log(url, 'vs', this.url,url.match(this.url));
             return url.match(this.url)};
         this.handlers.push(handler);
     }
@@ -34,8 +34,8 @@ Router.prototype.proc =  function (request,response) {
         let handlerfound=false;
         for(handler of this.handlers){
             if (handler.method == method && handler.validateurl(url) != null) {
-                console.log('trying handler', handler)
-                handler.callbk(request, response).then(()=>console.log("/////////",request.method));
+                //console.log('trying handler', handler)
+                handler.callbk(request, response).then(()=>console.log("/////////",request.method, request.url));
                 // handlerfound = true;
                 //res()
             }
@@ -57,7 +57,7 @@ function isRestURL(requestUrl) {
 
 router.add("GET",[/^\/style/,/^\/js/,/^\/node_modules/,/^\/favicon\.ico/],  function (request,response) {
     return new Promise(resolve => {
-        console.log('js handler started');
+        //console.log('js handler started');
         let url = request.url;
         let filepath = toFSpath(url);
         let mimeType = mime.getType(filepath);
@@ -75,7 +75,7 @@ router.add("GET",[/^\/style/,/^\/js/,/^\/node_modules/,/^\/favicon\.ico/],  func
 function sendresponse(data, response, status, type) {
     return new Promise(function (resolve) {
         //console.log({"Content-Type": type || "text/plain", "etag":etag});
-        console.log('sendresp', status);
+        //console.log('sendresp', status);
         response.writeHead(status, {"Content-Type": type || "text/plain", "etag": etag});
         response.end(data);
         resolve()
@@ -96,7 +96,7 @@ function getstatsAsync(filepath) {
 
 router.add("GET", [/^\/restapi\//],  function(request, response){
     return new Promise(function (res,rej) {
-        console.log('get url', request.url, 'restapi');
+        //console.log('get url', request.url, 'restapi');
         //let url = request.url;
         let url = request.url.replace(/\/restapi\//, '/');
         let filepath = toFSpath(url);
@@ -116,11 +116,11 @@ router.add("GET", [/^\/restapi\//],  function(request, response){
         getstatsAsync(filepath).catch(err=> sendresponse("Resource not found 404", response, '404', "text/plain")).then(stats=>{
             if (stats.isdir) {
 
-            console.log('calc  filelist');
+            //console.log('calc  filelist');
             getfilelist(url).then(filelistobj =>
                 sendresponse(JSON.stringify(filelistobj), response, "200"));
             // let filelistobj =  getfilelist(url);
-            console.log('calc-ed filelist sent')
+            //console.log('calc-ed filelist sent')
 
             // filelistobj = JSON.stringify(filelistobj);
             // response.end(filelistobj)
@@ -137,7 +137,7 @@ router.add("GET", [/^\/restapi\//],  function(request, response){
 
 router.add("GET", [/^\/pollver/], function (request, response) {
    return new Promise(res => {
-       console.log("POLLVER init");
+       //console.log("POLLVER init");
        //console.log('pollver request recieved')
        //let clversion = request.headers['clversion'];
        // let waiter = {clversion:clversion, response:response};
@@ -149,11 +149,11 @@ router.add("GET", [/^\/pollver/], function (request, response) {
        setTimeout(function () {
            let found = waiting.indexOf(response);
            if (found > -1) {
-               console.log('>>>', 'one will be removed by timeout', waiting.length);
+               //console.log('>>>', 'one will be removed by timeout', waiting.length);
                sendresponse("not updated pollingresponse", response, '203', "text/plain").then
                (()=> {
                    waiting.splice(found, 1);
-                   console.log('>>>', 'one will be removed by timeout', waiting.length)
+                   console.log('>>>', 'one was removed by timeout', waiting.length)
                })
            }
        }, 90 * 100);
@@ -190,7 +190,7 @@ router.add("GET", [/^\/files/], function (request, response) {
                         //console.log(filelistobj);
                         filelistobj = JSON.stringify(filelistobj);
                         let respdata = filefront + `<script type="text/javascript">let filelist = ${filelistobj}</script>`;
-                        console.log(respdata);
+                        //console.log(respdata);
                         sendresponse(respdata, response, "200", "text/html")
                         // response.end(filefront +`<script type="text/javascript">let filelist = ${filelistobj}</script>`)
                         res("GET files handler finished")//response.end()
@@ -223,52 +223,57 @@ function waitingAsyncSend(){
 
     })
 }
-router.add("PUT", [/.*/], async function (request, response) {
-
-    //res('done')
-    //console.log('PUT',request.url, toFSpath(request.url))
-    //let wrstream= createWriteStream(join(toFSpath(request.url),'inpstream'));
-    // wrstream.on("error", function (error) {
-    //     response.end(500, error.toString())
-    // });
-    // wrstream.on("finish", function () {
-    //     response.end('204')
-    // });
-    //request.pipe(wrstream)
-   // ___________
-    let form = new formidable.IncomingForm();
-    form.uploadDir = toFSpath(request.url);
-    form.keepExtensions = true;
-
-    form.on('file', function (field, file) {
-        console.log('file written before', file._writeStream.closed);
-
-        console.log('file written after', file._writeStream.closed);
-        rename(file.path, form.uploadDir + "/" + file.name);
-        // sendresponse('ok', response, "201")
-
-        console.log('PUT handler finished')
-
-        //upadating etag and initiating clients updates via                                     folderchanged)
-
-    });
-    form.on('end',  function () {
-
-        console.log('>>>form.end, all files uploaded', waiting.length);
-
-        etag = etag + 1;
-        // waiting.forEach(function (inwaitresp) {
-        //     console.log('--->>>resolving!? inwaitresp');
-        //     sendresponse('ok', inwaitresp, 201).then((res)=>{
-        //         console.log('sendresponse resolved', res)
-        //
-        //     });
+router.add("PUT", [/.*/],   function (request, response) {
+    return new Promise((resolve)=>{
+        console.log('PUT',request.url, toFSpath(request.url));
+        //let wrstream= createWriteStream(join(toFSpath(request.url),'inpstream'));
+        // wrstream.on("error", function (error) {
+        //     response.end(500, error.toString())
         // });
-        waitingAsyncSend().then(()=>
-       waiting=[])
+        // wrstream.on("finish", function () {
+        //     response.end('204')
+        // });
+        //request.pipe(wrstream)
+        // ___________
+        let form = new formidable.IncomingForm();
+        form.uploadDir = toFSpath(request.url);
+        form.keepExtensions = true;
+
+        form.on('file1', function (field, file) {
+            //console.log('file written before', file._writeStream.closed);
+
+            //console.log('file written after', file._writeStream.closed);
+            rename(file.path, form.uploadDir + "/" + file.name);
+
+            //upadating etag and initiating clients updates via
+            //folderchanged
+
+        });
+        form.on('end',  function () {
+
+            //console.log('>>>form.end, all files uploaded', waiting.length);
+
+            etag = etag + 1;
+            // waiting.forEach(function (inwaitresp) {
+            //     console.log('--->>>resolving!? inwaitresp');
+            //     sendresponse('ok', inwaitresp, 201).then((res)=>{
+
+            //
+            //     });
+            // });
+            waitingAsyncSend().then(()=>{
+                //waiting=[];
+                    console.log('PUT resolved')
+
+            }
+                )
+        });
+        form.parse(request)
+        sendresponse('ok', response, "201")
+        resolve('done')
     });
-    form.parse(request);
-});
+    });
+
 
 function toFSpath(url) {
     let {pathname} = parse(url);
