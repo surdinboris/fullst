@@ -145,14 +145,16 @@ router.add("GET", [/^\/pollver/], function (request, response) {
     //waiting.push(response);
     //console.log('waiter adding to pool', waiting.length);
     return new Promise(resolve => {
-        waiting.push(resolve);
+        waiting.push(response);
+        resolve()
         setTimeout(() => {
-            if (!this.waiting.includes(resolve)) return;
-            this.waiting = this.waiting.filter(r => r != resolve);
+            if (!waiting.includes(response)) return;
+            waiting = waiting.filter(r => r != response);
             //resolve({status: 304});
             sendresponse("not updated pollingresponse", response, '304', "text/plain")
             //
         }, 90 * 200);
+
     });
     // return new Promise(res => {
     //    //console.log("POLLVER init");
@@ -387,7 +389,7 @@ async function getfilelist(url) {
 
 let server = http.createServer( function (request, response){
     console.log('*****request execution started******', request.method,request.url);
-    router.proc(request, response)
+    return router.proc(request, response)
 
     // console.log('---------waiting before proc', waiting.length);
     // console.log('new request retrieved', request.url, request.method);
