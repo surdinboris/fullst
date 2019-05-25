@@ -152,7 +152,7 @@ router.add("GET", [/^\/pollver/], function (request, response) {
             //resolve({status: 304});
             sendresponse("not updated pollingresponse", response, '304', "text/plain")
             //
-        }, time * 1000);
+        }, 90 * 200);
     });
     // return new Promise(res => {
     //    //console.log("POLLVER init");
