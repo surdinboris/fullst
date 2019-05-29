@@ -7,7 +7,21 @@ body {
     margin: 0 0 0 0;
 }
 
-header{
+.ul_navbar_list{
+    /*margin: 0;*/
+    margin: auto;
+
+}
+.ul_navbar_list > li{
+    display: inline-block;
+    /*text-align: center;*/
+}
+.ul_navbar_list > li > a{
+    /*display: inline-block;*/
+    /*text-align: center;*/
+    margin: 40px;
+}
+header {
     height: 100px;
     background-color: #b4a980;
 
@@ -15,6 +29,8 @@ header{
 nav{
     height: 50px ;
     background-color: #dde7d7;
+    display: flex;
+
 }
 
 section,
