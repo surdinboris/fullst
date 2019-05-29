@@ -28,7 +28,6 @@ Router.prototype.add = function (method, urls, callbk) {
 //huge effect when proc is called syncroniously!
 Router.prototype.proc = function (request,response) {
 return new Promise((res,rej)=>{
-
     let method = request.method;
     let url = request.url;
     let handlerfound=false;
@@ -37,17 +36,13 @@ return new Promise((res,rej)=>{
             //console.log('trying handler', handler)
             handler.callbk(request, response);
             handlerfound = true;
-
         }
     }
     if (handlerfound){
         res('hanlder proc done')
     }
     else rej('no appropriate handler found')
-
 })
-
-
 };
 
 let router = new Router();
@@ -60,7 +55,7 @@ function isRestURL(requestUrl) {
     else return false
 }
 
-router.add("GET",[/^\/style/,/^\/js/,/^\/node_modules/,/^\/favicon\.ico/],  function (request,response) {
+router.add("GET",[/^\/style/,/^\/js/,/^\/node_modules/,/^\/favicon\.ico/,/^\/index*/],  function (request,response) {
     return new Promise(resolve => {
         //console.log('js handler started');
         let url = request.url;
@@ -86,7 +81,6 @@ function sendresponse(data, response, status, type) {
         resolve()
         // })
     })
-
 }
 
 function getstatsAsync(filepath) {
@@ -136,7 +130,6 @@ router.add("GET", [/^\/restapi\//],  function(request, response){
     });
         res("GET restapi handler finished")
     })
-
 });
 
 
@@ -146,7 +139,7 @@ router.add("GET", [/^\/pollver/], function (request, response) {
     //console.log('waiter adding to pool', waiting.length);
     return new Promise(resolve => {
         waiting.push(response);
-        resolve()
+        resolve();
         setTimeout(() => {
             if (!waiting.includes(response)) return;
             waiting = waiting.filter(r => r != response);
@@ -154,7 +147,6 @@ router.add("GET", [/^\/pollver/], function (request, response) {
             sendresponse("not updated pollingresponse", response, '304', "text/plain")
             //
         }, 90 * 200);
-
     });
     // return new Promise(res => {
     //    //console.log("POLLVER init");
@@ -189,7 +181,6 @@ router.add("GET", [/^\/files/], function (request, response) {
     return new Promise((res, rej) => {
         console.log('get url', request.url);
         let url = request.url;
-
         let filepath = toFSpath(url);
         // console.log('toFSpath',request.url,toFSpath(request.url))
         // let stats;
@@ -241,19 +232,14 @@ function waitingAsyncSend(){
     return new Promise(resolve=>{
         let counter=0;
         waiting.forEach(function (inwaitresp) {
-
-
             sendresponse('ok', inwaitresp, 201).then((res)=>{
                 counter=counter+1;
                 console.log('--->>>sendresponse to waiter',counter);
-
-
             });
         });
         resolve()
         // console.log('--->>>resolving!?',inwaitresp);
         // resolve()
-
     })
 }
 router.add("PUT", [/.*/],   function (request, response) {
@@ -271,38 +257,30 @@ router.add("PUT", [/.*/],   function (request, response) {
         let form = new formidable.IncomingForm();
         form.uploadDir = toFSpath(request.url);
         form.keepExtensions = true;
-
         form.on('file', function (field, file) {
             //console.log('file written before', file._writeStream.closed);
-
             //console.log('file written after', file._writeStream.closed);
             rename(file.path, form.uploadDir + "/" + file.name);
-
             //upadating etag and initiating clients updates via
             //folderchanged
-
         });
         form.on('end',  function () {
-
             //console.log('>>>form.end, all files uploaded', waiting.length);
-
             etag = etag + 1;
             // waiting.forEach(function (inwaitresp) {
             //     console.log('--->>>resolving!? inwaitresp');
             //     sendresponse('ok', inwaitresp, 201).then((res)=>{
-
             //
             //     });
             // });
             waitingAsyncSend().then(()=>{
                 waiting=[];
                     console.log('PUT resolved')
-
             }
                 )
         });
         form.parse(request);
-        sendresponse('ok', response, "201")
+        sendresponse('ok', response, "201");
         resolve('done')
     });
     });

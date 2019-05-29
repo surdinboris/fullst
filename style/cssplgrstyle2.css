@@ -1,0 +1,42 @@
+*{
+    box-sizing: border-box;
+
+
+}
+body {
+    margin: 0 0 0 0;
+}
+
+header{
+    height: 100px;
+    background-color: #b4a980;
+
+}
+nav{
+    height: 50px ;
+    background-color: #dde7d7;
+}
+
+section,
+article{
+    float: left;
+    height: 200px;
+    width:66%;
+    background-color: #c4f8e4;
+}
+aside{
+
+    float: right;
+    height: 400px;
+    width: 30%;
+    background-color: #accd9b;
+}
+
+footer{
+
+    clear: both;
+    margin-bottom: 0;
+    height: 100px;
+    background-color: black;
+
+}

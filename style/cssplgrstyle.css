@@ -50,14 +50,15 @@ body{
 }
 /*banner style*/
 #main_banner{
-    padding-top: 40px;
-    background-image: url("../images/pexels-photo-355770.jpeg");
+    /*padding-top: 40px;*/
+    background-image: url("../files/R0017287.jpg");
     background-size: cover;
-    height: 300px;
+    height: 700px;
     background-position-y: 100%;
 }
 #slogan{
     margin: 5% 5%;
+    color: white;
 }
 /*main content*/
 #pointer{
@@ -66,7 +67,6 @@ body{
 }
 
 #main_content{
-
     display: flex;
 }
 .benefit{
