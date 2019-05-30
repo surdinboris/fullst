@@ -3,6 +3,9 @@
 
 
 }
+html, body {
+    height: 100%;
+}
 body {
     margin: 0 0 0 0;
 }
@@ -22,12 +25,12 @@ body {
     margin: 40px;
 }
 header {
-    height: 100px;
+    min-height: 100px;
     background-color: #b4a980;
 
 }
 nav{
-    height: 50px ;
+    min-height: 50px ;
     background-color: #dde7d7;
     display: flex;
 
@@ -36,15 +39,14 @@ nav{
 section,
 article{
     float: left;
-    height: 200px;
-    width:66%;
+    height: 40%;
+    width:60%;
     background-color: #c4f8e4;
 }
 aside{
-
     float: right;
-    height: 400px;
-    width: 30%;
+    height: 100%;
+    width: 40%;
     background-color: #accd9b;
 }
 
@@ -52,7 +54,7 @@ footer{
 
     clear: both;
     margin-bottom: 0;
-    height: 100px;
+    min-height: 10%;
     background-color: black;
 
 }
