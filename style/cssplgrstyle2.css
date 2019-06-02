@@ -12,6 +12,7 @@ body {
 
 .ul_navbar_list{
     /*margin: 0;*/
+    white-space: nowrap;
     margin: auto;
 
 }
@@ -20,15 +21,30 @@ body {
     /*text-align: center;*/
 }
 .ul_navbar_list > li > a{
+    text-decoration: none;
+    color: black;
+    font-family: "Bauhaus 93";
+    font-weight: bold;
+    font-size: 25pt;
     /*display: inline-block;*/
     /*text-align: center;*/
-    margin: 40px;
+    padding:  0 50px;
+    border-radius: 10px;
 }
+.ul_navbar_list > li > a:hover{
+
+    color: #ffffff;
+    background-color: #7e7458;
+}
+
 header {
     min-height: 100px;
     background-color: #b4a980;
-
+    background-image: url("../style/bg_drawing.jpg");
+    background-position: center;
+    background-size: cover
 }
+
 nav{
     min-height: 50px ;
     background-color: #dde7d7;
@@ -39,8 +55,8 @@ nav{
 section,
 article{
     float: left;
-    height: 40%;
-    width:60%;
+    height: 50%;
+    width: 60%;
     background-color: #c4f8e4;
 }
 aside{
@@ -51,10 +67,11 @@ aside{
 }
 
 footer{
-
     clear: both;
+    display: flex;
+    height: auto;
     margin-bottom: 0;
     min-height: 10%;
-    background-color: black;
+    /*background-color: black;*/
 
 }
