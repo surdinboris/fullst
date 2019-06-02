@@ -1,62 +1,53 @@
 $(document).ready(function() {
     console.log('loading started');
-    //first step = loading fixed amount of images
-
-    //second step = additionally loan fresh images by scrolling to bottom  trigger
-    // https://picsum.photos/id/281/500/800
-
-
-    // function loadimage(iurl) {
-    //     return new Promise(function (res, rej) {
-    //                 let downloadedimage = new Image();
-    //                 downloadedimage.onload = function () {
-    //                     let docimage = document.createElement("img");
-    //                     docimage.setAttribute('id',iurl);
-    //                     // docimage.setAttribute('id', counter);
-    //                     docimage.src = this.src;
-    //                     res(docimage)
-    //                 };
-    //                 downloadedimage.src = iurl;
-    //         })
-//
-//     }
-//     for(let i=0; i<100; i++){
-//         (async function runit() {
-//             let imgcont = document.getElementById('gallery');
-//           let dwnlddimg= await  loadimage(`https://loremflickr.com/420/540`);
-//           imgcont.appendChild(dwnlddimg)
-//         })()
-//
-//     }
-//
-//
-// });
+    $(window).scroll(function() {
+        if($(window).scrollTop() + $(window).height() == $(document).height()) {
+            alert("bottom!");
+        }
+    });
 
     function loadimage(iurl) {
         return new Promise(function (res, rej) {
-        fetch(iurl).then(response=>{
-
-            let downloadedimage = new Image();
-            downloadedimage.onload = function () {
-                let docimage = document.createElement("img");
-                // docimage.setAttribute('id',iurl);
-                // docimage.setAttribute('id', counter);
-                docimage.src = this.src;
-                res(docimage)
-            };
-            downloadedimage.src = response.url;
-
-
+            fetch(iurl).catch(e => rej(e)).then(response => response.blob())
+                .then(imageblob => {
+                    let urlimg = URL.createObjectURL(imageblob);
+                    console.log(urlimg);
+                        let docimage = document.createElement("img");
+                        docimage.src = urlimg;
+                    let imgcont = document.getElementById('gallery');
+                    console.log(imgcont)
+                        imgcont.appendChild(docimage);
+                    res(docimage)
+                })
         })
-        })
-
     }
-    for(let i=0; i<100; i++){
+            //
+            // let downloadedimage = new Image();
+            // downloadedimage.onload = function () {
+            //     let docimage = document.createElement("img");
+            //     docimage.src = this.src;
+            //     res(docimage)
+
+            // if(response){
+            //     downloadedimage.src = response.url;
+            // }
+            // else {
+            //     rej()
+            // }
+            // })
+        // })
+
+    // }
+    for(let i=0; i<300; i++){
         (async function runit() {
-            let imgcont = document.getElementById('gallery');
-            let dwnlddimg= await  loadimage(`https://loremflickr.com/420/540`);
-            imgcont.appendChild(dwnlddimg);
-            console.log(dwnlddimg)
+            try {
+                //let imgcont = document.getElementById('gallery');
+                await  loadimage(`https://loremflickr.com/220/340`);
+                //imgcont.appendChild(dwnlddimg);
+            } catch (e) {
+                console.log(e)
+            }
+
         })()
 
     }

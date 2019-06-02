@@ -14,6 +14,7 @@ body {
     /*margin: 0;*/
     white-space: nowrap;
     margin: auto;
+    overflow: auto;
 
 }
 .ul_navbar_list > li{
@@ -25,7 +26,7 @@ body {
     color: black;
     font-family: "Bauhaus 93";
     font-weight: bold;
-    font-size: 25pt;
+    font-size: 15pt;
     /*display: inline-block;*/
     /*text-align: center;*/
     padding:  0 50px;
@@ -37,7 +38,7 @@ body {
     background-color: #7e7458;
 }
 
-header {
+header{
     min-height: 100px;
     background-color: #b4a980;
     background-image: url("../style/bg_drawing.jpg");
@@ -49,21 +50,27 @@ nav{
     min-height: 50px ;
     background-color: #dde7d7;
     display: flex;
-
 }
 
 section,
 article{
+    /*display: table-cell;*/
+    /*vertical-align: middle;*/
+    padding-top: 20px ;
+    text-align: center;
+    align-items:  center;
     float: left;
-    height: 50%;
-    width: 60%;
-    background-color: #c4f8e4;
+    /*height: 50%;*/
+    width: 70%;
+    /*background-color: #c4f8e4;*/
 }
 aside{
+    padding: 20px 20px;
+    text-align: center;
     float: right;
-    height: 100%;
-    width: 40%;
-    background-color: #accd9b;
+    height: 100vh;
+    width: 30%;
+    /*background-color: #accd9b;*/
 }
 
 footer{
@@ -75,6 +82,6 @@ footer{
     /*background-color: black;*/
 }
 
-footer > img{
+#gallery > img{
     display: inline-block;
 }
