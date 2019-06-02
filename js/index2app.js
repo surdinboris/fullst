@@ -1,12 +1,13 @@
 $(document).ready(function() {
     console.log('loading started');
-    $(window).scroll(function() {
-        if($(window).scrollTop() + $(window).height() == $(document).height()) {
-            alert("bottom!");
-        }
-    });
-
+    // $(window).scroll(function() {
+    //     if($(window).scrollTop() + $(window).height() == $(document).height()) {
+    //         alert("bottom!");
+    //     }
+    // });
+    let counter=0;
     function loadimage(iurl) {
+        counter++;
         return new Promise(function (res, rej) {
             fetch(iurl).catch(e => rej(e)).then(response => response.blob())
                 .then(imageblob => {
@@ -16,11 +17,19 @@ $(document).ready(function() {
                         docimage.src = urlimg;
                     let imgcont = document.getElementById('gallery');
                     console.log(imgcont)
-                        imgcont.appendChild(docimage);
-                    res(docimage)
+                    imgcont.appendChild(docimage);
+                    if(counter <200){
+                        setTimeout(function () {
+                            loadimage(iurl)
+                        },0)
+
+                    }
+
+
                 })
         })
     }
+    loadimage(`https://picsum.photos/200/300`)
             //
             // let downloadedimage = new Image();
             // downloadedimage.onload = function () {
@@ -37,20 +46,20 @@ $(document).ready(function() {
             // })
         // })
 
+    // // }
+    // for(let i=0; i<300; i++){
+    //     (async function runit() {
+    //         try {
+    //             //let imgcont = document.getElementById('gallery');
+    //             await  loadimage(`https://source.unsplash.com/random/100x100`);
+    //             //imgcont.appendChild(dwnlddimg);
+    //         } catch (e) {
+    //             console.log(e)
+    //         }
+    //
+    //     })()
+    //
     // }
-    for(let i=0; i<300; i++){
-        (async function runit() {
-            try {
-                //let imgcont = document.getElementById('gallery');
-                await  loadimage(`https://loremflickr.com/220/340`);
-                //imgcont.appendChild(dwnlddimg);
-            } catch (e) {
-                console.log(e)
-            }
-
-        })()
-
-    }
 
 
 });
