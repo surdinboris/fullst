@@ -68,10 +68,13 @@ aside{
 
 footer{
     clear: both;
-    display: flex;
+    /*display: flex;*/
     height: auto;
     margin-bottom: 0;
     min-height: 10%;
     /*background-color: black;*/
+}
 
+footer > img{
+    display: inline-block;
 }
