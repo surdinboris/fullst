@@ -1,12 +1,13 @@
 $(document).ready(function() {
     console.log('loading started');
-    // $(window).scroll(function() {
-    //     if($(window).scrollTop() + $(window).height() == $(document).height()) {
-    //         alert("bottom!");
-    //     }
-    // });
+    $(window).scroll(function() {
+        if($(window).scrollTop() == $(document).height() - $(window).height()) {
+            console.log('load additional images')
+            loadimage(`https://picsum.photos/200/300`,20)
+        }
+    });
     let counter=0;
-    function loadimage(iurl) {
+    function loadimage(iurl,amount) {
         counter++;
         return new Promise(function (res, rej) {
             fetch(iurl).catch(e => rej(e)).then(response => response.blob())
@@ -16,11 +17,12 @@ $(document).ready(function() {
                         let docimage = document.createElement("img");
                         docimage.src = urlimg;
                     let imgcont = document.getElementById('gallery');
-                    console.log(imgcont)
+                    console.log(imgcont);
                     imgcont.appendChild(docimage);
-                    if(counter <200){
+                    //download(imageblob, `img${counter}.jpg`);
+                    if(counter < amount){
                         setTimeout(function () {
-                            loadimage(iurl)
+                            loadimage(iurl, amount)
                         },0)
 
                     }
@@ -29,37 +31,25 @@ $(document).ready(function() {
                 })
         })
     }
-    loadimage(`https://picsum.photos/200/300`)
-            //
-            // let downloadedimage = new Image();
-            // downloadedimage.onload = function () {
-            //     let docimage = document.createElement("img");
-            //     docimage.src = this.src;
-            //     res(docimage)
+    loadimage(`https://picsum.photos/300/500`,8)
 
-            // if(response){
-            //     downloadedimage.src = response.url;
-            // }
-            // else {
-            //     rej()
-            // }
-            // })
-        // })
 
-    // // }
-    // for(let i=0; i<300; i++){
-    //     (async function runit() {
-    //         try {
-    //             //let imgcont = document.getElementById('gallery');
-    //             await  loadimage(`https://source.unsplash.com/random/100x100`);
-    //             //imgcont.appendChild(dwnlddimg);
-    //         } catch (e) {
-    //             console.log(e)
-    //         }
-    //
-    //     })()
-    //
-    // }
-
+    function download(data, filename) {
+        var file = new Blob([data]);
+        if (window.navigator.msSaveOrOpenBlob) // IE10+
+            window.navigator.msSaveOrOpenBlob(file, filename);
+        else { // Others
+            var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        }
+    }
 
 });
